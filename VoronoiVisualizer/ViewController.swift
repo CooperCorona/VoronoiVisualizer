@@ -86,6 +86,7 @@ class ViewController: NSViewController {
         let result = diagram.sweep()
         for (i, cell) in result.cells.enumerated() {
             let s = GLSVoronoiSprite(cell: cell, boundaries: self.glView.frame.size)
+            s.alpha = 0.75
             s.shadeColor = SCVector3.rainbowColorAtIndex(i)
             self.glView.container.addChild(s)
             self.sprites.append(s)
@@ -155,7 +156,6 @@ class ViewController: NSViewController {
             
             usedPoints.insert(point)
         }
-        
         guard usedPoints.count > 1 else {
             self.displayAlert(text: "More than 1 point is required.")
             return

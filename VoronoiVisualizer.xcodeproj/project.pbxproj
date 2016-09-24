@@ -12,7 +12,7 @@
 		DC130ED41D8DC6D8007304AF /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC130ED31D8DC6D8007304AF /* ColorShader.fsh */; };
 		DC130ED81D8DC753007304AF /* GLSVoronoiEdgeSprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC130ED71D8DC753007304AF /* GLSVoronoiEdgeSprite.swift */; };
 		DC130EDA1D8DE2A9007304AF /* WindowResizeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */; };
-		DCDFDCBA1D8E40FD002356E0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA998D1D8CC9F90019964F /* ViewController.swift */; };
+		DC8B22971D8F908C00C0BA11 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA998D1D8CC9F90019964F /* ViewController.swift */; };
 		DCEA998C1D8CC9F90019964F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA998B1D8CC9F90019964F /* AppDelegate.swift */; };
 		DCEA99901D8CC9F90019964F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCEA998F1D8CC9F90019964F /* Assets.xcassets */; };
 		DCEA99931D8CC9F90019964F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCEA99911D8CC9F90019964F /* Main.storyboard */; };
@@ -276,7 +276,7 @@
 			files = (
 				DC130ED81D8DC753007304AF /* GLSVoronoiEdgeSprite.swift in Sources */,
 				DC130EDA1D8DE2A9007304AF /* WindowResizeController.swift in Sources */,
-				DCDFDCBA1D8E40FD002356E0 /* ViewController.swift in Sources */,
+				DC8B22971D8F908C00C0BA11 /* ViewController.swift in Sources */,
 				DCEA998C1D8CC9F90019964F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

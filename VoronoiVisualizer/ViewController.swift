@@ -11,7 +11,11 @@ import Cocoa
 import CoronaConvenience
 import CoronaStructures
 import CoronaGL
-import Voronoi
+@testable import Voronoi
+
+enum ParsePointError: Error {
+    case Failed
+}
 
 extension CGPoint: Hashable {
     public var hashValue: Int {
@@ -28,6 +32,10 @@ class ViewController: NSViewController {
     @IBOutlet weak var columnTextField: NSTextField!
     
     var sprites:[GLSNode] = []
+    var diagram:VoronoiDiagram? = nil
+    
+    var undoStack = Stack<[CGPoint]>()
+    var redoStack = Stack<[CGPoint]>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +82,13 @@ class ViewController: NSViewController {
             return
         }
         let diagram = VoronoiDiagram.createWithSize(self.glView.frame.size, rows: rows, columns: columns, range: 1.0)
+        
+        //Add undo, remove all redos
+        self.undoStack.push(diagram.points)
+        while self.redoStack.count > 0 {
+            self.redoStack.pop()
+        }
+        
         self.display(diagram: diagram)
     }
     
@@ -84,7 +99,9 @@ class ViewController: NSViewController {
         self.sprites = []
         
         let result = diagram.sweep()
+        
         for (i, cell) in result.cells.enumerated() {
+            
             let s = GLSVoronoiSprite(cell: cell, boundaries: self.glView.frame.size)
             s.alpha = 0.75
             s.shadeColor = SCVector3.rainbowColorAtIndex(i)
@@ -99,12 +116,25 @@ class ViewController: NSViewController {
             self.glView.addChild(es)
             self.sprites.append(es)
         }
+ 
         
         self.textView.string = diagram.points.reduce("") { (a:String, b:CGPoint) in
-            "\(a)\(b.clampDecimals(2))\n"
+            "\(a)\(b.clampDecimals(6))\n"
         }
-        self.textView.string!.removeLast()
         
+        self.textView.string!.removeLast()
+ 
+        
+        for edge in diagram.edges {
+            let distance = edge.startPoint.distanceFrom(edge.endPoint)
+            let angle = edge.startPoint.angleTo(edge.endPoint)
+            let s = GLSSprite(position: edge.startPoint, size: CGSize(width: distance, height: 4.0), texture: "White Tile")
+            s.anchor = CGPoint(x: 0.0, y: 0.5)
+            s.rotation = angle
+            self.glView.addChild(s)
+            self.sprites.append(s)
+        }
+ 
         self.glView.display()
     }
 
@@ -127,12 +157,12 @@ class ViewController: NSViewController {
         return strs
     }
     
-    @IBAction func calculateButtonPressed(_ sender: AnyObject) {
+    func parsePoints() throws -> [CGPoint] {
         let lines = self.split(string: self.textView.string!).map() { $0.trimmingCharacters(in: CharacterSet.whitespaces) }
         //This regex matches strings of the form (Number, Number)
         //where that is the only text in the string.
         guard let regex = NSRegularExpression(regex: "^\\([0-9]+\\.*[0-9]*,\\s[0-9]+\\.*[0-9]*\\)$") else {
-            return
+            throw ParsePointError.Failed
         }
         
         var usedPoints = Set<CGPoint>()
@@ -140,30 +170,83 @@ class ViewController: NSViewController {
             if !line.matchesRegex(regex.pattern) {
                 self.highlight(line: i)
                 self.displayAlert(text: "This line is malformatted.")
-                return
+                throw ParsePointError.Failed
             }
             let point = NSPointFromString(line)
             if usedPoints.contains(point) {
                 self.highlight(line: i)
                 self.displayAlert(text: "You've already used this point.")
-                return
+                throw ParsePointError.Failed
             }
             if point.x <= 0.0 || point.x >= self.glView.frame.width || point.y <= 0.0 || point.y >= self.glView.frame.height {
                 self.highlight(line: i)
                 self.displayAlert(text: "This point is outside the bounds (0.0, 0.0) - \(self.glView.frame.size).")
-                return
+                throw ParsePointError.Failed
             }
             
             usedPoints.insert(point)
         }
         guard usedPoints.count > 1 else {
             self.displayAlert(text: "More than 1 point is required.")
-            return
+            throw ParsePointError.Failed
         }
         
-        let diagram = VoronoiDiagram(points: usedPoints.toArray(), size: self.glView.frame.size)
-        self.display(diagram: diagram)
+        return usedPoints.toArray()
+    }
+    
+    @IBAction func calculateButtonPressed(_ sender: AnyObject) {
+        do {
+            let points = try self.parsePoints()
+            let diagram = VoronoiDiagram(points: points, size: self.glView.frame.size)
+            self.display(diagram: diagram)
+            
+            //Add undo, remove all redos
+            self.undoStack.push(diagram.points)
+            while self.redoStack.count > 0 {
+                self.redoStack.pop()
+            }
+        } catch {
+            
+        }
         
+    }
+    
+    @IBAction func stepButtonPressed(_ sender: AnyObject) {
+        if let diagram = self.diagram {
+            diagram.sweepOnce()
+            if diagram.events.count == 0 {
+                self.diagram = nil
+                self.calculateButtonPressed(sender)
+            }
+        } else {
+            do {
+                let points = try self.parsePoints()
+                let diagram = VoronoiDiagram(points: points, size: self.glView.frame.size)
+                diagram.sweepOnce()
+                self.diagram = diagram
+            } catch {
+                
+            }
+        }
+    }
+    
+    @IBAction func treeButtonPressed(_ sender: AnyObject) {
+    
+    }
+    
+    override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "TreeSegue"?:
+            guard let dest = segue.destinationController as? TreeController else {
+                return
+            }
+            guard let diagram = self.diagram else {
+                return
+            }
+            dest.generateViews(diagram: diagram)
+        default:
+            break
+        }
     }
     
     func displayAlert(text:String) {
@@ -195,6 +278,22 @@ class ViewController: NSViewController {
         let nsrange = NSRange(location: newlineStart, length: newlineEnd - newlineStart)
         self.textView.scrollRangeToVisible(nsrange)
         self.textView.showFindIndicator(for: nsrange)
+    }
+    
+    @IBAction func backButtonPressed(_ sender: AnyObject) {
+        if let top = self.undoStack.pop() {
+            let diagram = VoronoiDiagram(points: top, size: self.glView.frame.size)
+            self.display(diagram: diagram)
+            self.redoStack.push(top)
+        }
+    }
+    
+    @IBAction func nextButtonPressed(_ sender: AnyObject) {
+        if let top = self.redoStack.pop() {
+            let diagram = VoronoiDiagram(points: top, size: self.glView.frame.size)
+            self.display(diagram: diagram)
+            self.undoStack.push(top)
+        }
     }
     
 }

@@ -86,7 +86,7 @@ class ViewController: NSViewController {
         //Add undo, remove all redos
         self.undoStack.push(diagram.points)
         while self.redoStack.count > 0 {
-            self.redoStack.pop()
+            let _ = self.redoStack.pop()
         }
         
         self.display(diagram: diagram)
@@ -94,7 +94,7 @@ class ViewController: NSViewController {
     
     func display(diagram:VoronoiDiagram) {
         for s in self.sprites {
-            self.glView.removeChild(s)
+            let _ = self.glView.removeChild(s)
         }
         self.sprites = []
         
@@ -122,7 +122,7 @@ class ViewController: NSViewController {
             "\(a)\(b.clampDecimals(6))\n"
         }
         
-        self.textView.string!.removeLast()
+        let _ = self.textView.string!.removeLast()
  
         
         for edge in diagram.edges {
@@ -203,7 +203,7 @@ class ViewController: NSViewController {
             //Add undo, remove all redos
             self.undoStack.push(diagram.points)
             while self.redoStack.count > 0 {
-                self.redoStack.pop()
+                let _ = self.redoStack.pop()
             }
         } catch {
             

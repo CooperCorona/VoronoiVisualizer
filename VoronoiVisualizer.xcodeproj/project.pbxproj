@@ -12,7 +12,6 @@
 		DC130ED41D8DC6D8007304AF /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC130ED31D8DC6D8007304AF /* ColorShader.fsh */; };
 		DC130ED81D8DC753007304AF /* GLSVoronoiEdgeSprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC130ED71D8DC753007304AF /* GLSVoronoiEdgeSprite.swift */; };
 		DC130EDA1D8DE2A9007304AF /* WindowResizeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */; };
-		DC55FA1F1DA1725B00AB31AA /* TreeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC55FA1E1DA1725B00AB31AA /* TreeController.swift */; };
 		DC8B22971D8F908C00C0BA11 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA998D1D8CC9F90019964F /* ViewController.swift */; };
 		DCEA998C1D8CC9F90019964F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA998B1D8CC9F90019964F /* AppDelegate.swift */; };
 		DCEA99901D8CC9F90019964F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCEA998F1D8CC9F90019964F /* Assets.xcassets */; };
@@ -56,7 +55,6 @@
 		DC130ED31D8DC6D8007304AF /* ColorShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorShader.fsh; sourceTree = "<group>"; };
 		DC130ED71D8DC753007304AF /* GLSVoronoiEdgeSprite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLSVoronoiEdgeSprite.swift; sourceTree = "<group>"; };
 		DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowResizeController.swift; sourceTree = "<group>"; };
-		DC55FA1E1DA1725B00AB31AA /* TreeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeController.swift; sourceTree = "<group>"; };
 		DCEA99881D8CC9F90019964F /* VoronoiVisualizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoronoiVisualizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCEA998B1D8CC9F90019964F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DCEA998D1D8CC9F90019964F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -115,7 +113,6 @@
 				DC130ECC1D8DBE65007304AF /* WhiteCircle.pdf */,
 				DCEA998B1D8CC9F90019964F /* AppDelegate.swift */,
 				DC130ED71D8DC753007304AF /* GLSVoronoiEdgeSprite.swift */,
-				DC55FA1E1DA1725B00AB31AA /* TreeController.swift */,
 				DCEA998D1D8CC9F90019964F /* ViewController.swift */,
 				DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */,
 				DCEA99E11D8CFC380019964F /* BasicShader.vsh */,
@@ -278,7 +275,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC130ED81D8DC753007304AF /* GLSVoronoiEdgeSprite.swift in Sources */,
-				DC55FA1F1DA1725B00AB31AA /* TreeController.swift in Sources */,
 				DC130EDA1D8DE2A9007304AF /* WindowResizeController.swift in Sources */,
 				DC8B22971D8F908C00C0BA11 /* ViewController.swift in Sources */,
 				DCEA998C1D8CC9F90019964F /* AppDelegate.swift in Sources */,

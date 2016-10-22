@@ -33,6 +33,10 @@ class ViewController: NSViewController {
     
     var sprites:[GLSNode] = []
     var diagram:VoronoiDiagram? = nil
+    var points:[CGPoint] = []
+    var dragIndex:Int? = nil
+    var initialMouseLocation = NSPoint.zero
+    var initialDragPoint = NSPoint.zero
     
     var undoStack = Stack<[CGPoint]>()
     var redoStack = Stack<[CGPoint]>()
@@ -83,10 +87,12 @@ class ViewController: NSViewController {
         }
         let diagram = VoronoiDiagram.createWithSize(self.glView.frame.size, rows: rows, columns: columns, range: 1.0)
         
-        //Add undo, remove all redos
-        self.undoStack.push(diagram.points)
-        while self.redoStack.count > 0 {
-            let _ = self.redoStack.pop()
+        if let oldDiagram = self.diagram {
+            //Add undo, remove all redos
+            self.undoStack.push(oldDiagram.points)
+            while self.redoStack.count > 0 {
+                let _ = self.redoStack.pop()
+            }
         }
         
         self.display(diagram: diagram)
@@ -136,6 +142,22 @@ class ViewController: NSViewController {
         }
  
         self.glView.display()
+        self.diagram = diagram
+        self.points = diagram.points
+    }
+    
+    func createDiagramFor(points:[CGPoint]) {
+        let diagram = VoronoiDiagram(points: points, size: self.glView.frame.size)
+        
+        if let oldDiagram = self.diagram {
+            //Add undo, remove all redos
+            self.undoStack.push(oldDiagram.points)
+            while self.redoStack.count > 0 {
+                let _ = self.redoStack.pop()
+            }
+        }
+        
+        self.display(diagram: diagram)
     }
 
     func viewDidResize() {
@@ -197,56 +219,11 @@ class ViewController: NSViewController {
     @IBAction func calculateButtonPressed(_ sender: AnyObject) {
         do {
             let points = try self.parsePoints()
-            let diagram = VoronoiDiagram(points: points, size: self.glView.frame.size)
-            self.display(diagram: diagram)
-            
-            //Add undo, remove all redos
-            self.undoStack.push(diagram.points)
-            while self.redoStack.count > 0 {
-                let _ = self.redoStack.pop()
-            }
+            self.createDiagramFor(points: points)
         } catch {
             
         }
         
-    }
-    
-    @IBAction func stepButtonPressed(_ sender: AnyObject) {
-        if let diagram = self.diagram {
-            diagram.sweepOnce()
-            if diagram.events.count == 0 {
-                self.diagram = nil
-                self.calculateButtonPressed(sender)
-            }
-        } else {
-            do {
-                let points = try self.parsePoints()
-                let diagram = VoronoiDiagram(points: points, size: self.glView.frame.size)
-                diagram.sweepOnce()
-                self.diagram = diagram
-            } catch {
-                
-            }
-        }
-    }
-    
-    @IBAction func treeButtonPressed(_ sender: AnyObject) {
-    
-    }
-    
-    override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "TreeSegue"?:
-            guard let dest = segue.destinationController as? TreeController else {
-                return
-            }
-            guard let diagram = self.diagram else {
-                return
-            }
-            dest.generateViews(diagram: diagram)
-        default:
-            break
-        }
     }
     
     func displayAlert(text:String) {
@@ -282,18 +259,73 @@ class ViewController: NSViewController {
     
     @IBAction func backButtonPressed(_ sender: AnyObject) {
         if let top = self.undoStack.pop() {
+            if let oldDiagram = self.diagram {
+                self.redoStack.push(oldDiagram.points)
+            }
             let diagram = VoronoiDiagram(points: top, size: self.glView.frame.size)
             self.display(diagram: diagram)
-            self.redoStack.push(top)
         }
     }
     
     @IBAction func nextButtonPressed(_ sender: AnyObject) {
         if let top = self.redoStack.pop() {
+            if let oldDiagram = self.diagram {
+                self.undoStack.push(oldDiagram.points)
+            }
             let diagram = VoronoiDiagram(points: top, size: self.glView.frame.size)
             self.display(diagram: diagram)
-            self.undoStack.push(top)
         }
+    }
+ 
+    func getGLLocation(event:NSEvent) -> NSPoint {
+        return event.locationInWindow - self.glView.frame.origin
+    }
+    
+    override func mouseDown(with event: NSEvent) {
+        guard self.points.count <= 64 else {
+            //Any more points, and the calculations become
+            //unfeasibly slow to have nice dragging. The actual
+            //number is probably higher than 64, but I don't
+            //know what it is, so 64 is probably a good lower bound.
+            return
+        }
+        self.dragIndex = nil
+        let location = self.getGLLocation(event: event)
+        for (i, point) in self.points.enumerated() {
+            if point.distanceFrom(location) <= 16.0 {
+                self.dragIndex = i
+                break
+            }
+        }
+        guard let dragIndex = self.dragIndex else {
+            return
+        }
+        self.initialMouseLocation = location
+        self.initialDragPoint = self.points[dragIndex]
+    }
+    
+    override func mouseDragged(with event: NSEvent) {
+        guard let dragIndex = self.dragIndex else {
+            return
+        }
+        let location = self.getGLLocation(event: event)
+        let delta = location - self.initialMouseLocation
+        let newPoint = self.initialDragPoint + delta
+        self.points[dragIndex] = newPoint
+        self.createDiagramFor(points: points)
+    }
+    
+    override func mouseUp(with event: NSEvent) {
+        guard self.dragIndex == nil else {
+            self.dragIndex = nil
+            return
+        }
+        guard self.glView.frame.contains(event.locationInWindow) else {
+            return
+        }
+        let location = self.getGLLocation(event: event)
+        self.points.append(location)
+        self.createDiagramFor(points: self.points)
     }
     
 }

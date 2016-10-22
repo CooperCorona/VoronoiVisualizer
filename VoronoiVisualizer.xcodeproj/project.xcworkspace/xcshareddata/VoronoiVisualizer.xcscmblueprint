@@ -1,0 +1,51 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "3348876C35B1927724B0EDCAF307B7E8CC2D6410",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "4A90A722C0D5BCE93BAF9E2494386311BDFB5DB8" : 9223372036854775807,
+    "34F7D422FB3054CFBD6E34FD29953606CFFC95C8" : 9223372036854775807,
+    "3348876C35B1927724B0EDCAF307B7E8CC2D6410" : 9223372036854775807,
+    "404240255233E19FDAA39885DFC14C20D8257872" : 9223372036854775807,
+    "8F9D2AD734303863F151C37D7BB0E5A7EA91ED7A" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "D3389439-0667-4D0B-9B82-3A03063716F4",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "4A90A722C0D5BCE93BAF9E2494386311BDFB5DB8" : "Refactored%20Dependencies\/CoronaStructures\/",
+    "34F7D422FB3054CFBD6E34FD29953606CFFC95C8" : "Refactored%20Dependencies\/CoronaConvenience\/",
+    "3348876C35B1927724B0EDCAF307B7E8CC2D6410" : "VoronoiVisualizer\/",
+    "404240255233E19FDAA39885DFC14C20D8257872" : "Voronoi\/",
+    "8F9D2AD734303863F151C37D7BB0E5A7EA91ED7A" : "Refactored%20Dependencies\/CoronaGL\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "VoronoiVisualizer",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "VoronoiVisualizer.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CooperCorona\/VoronoiVisualizer.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3348876C35B1927724B0EDCAF307B7E8CC2D6410"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CooperCorona\/CoronaConvenience.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "34F7D422FB3054CFBD6E34FD29953606CFFC95C8"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CooperCorona\/Voronoi.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "404240255233E19FDAA39885DFC14C20D8257872"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CooperCorona\/CoronaStructures.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4A90A722C0D5BCE93BAF9E2494386311BDFB5DB8"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CooperCorona\/CoronaGL.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8F9D2AD734303863F151C37D7BB0E5A7EA91ED7A"
+    }
+  ]
+}

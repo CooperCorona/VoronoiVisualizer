@@ -20,9 +20,24 @@ class GLSVoronoiEdgeSprite: GLSNode {
     }
     
     let edgeProgram = ShaderHelper.programDictionaryForString("Color Shader")!
-    let edgeVertices:[Vertex]
+    private(set) var edgeVertices:[Vertex]
     
-    init(cell:VoronoiCell, color:SCVector4, thickness:CGFloat) {
+    override var shadeColor: SCVector3 {
+        didSet {
+            for i in 0..<self.edgeVertices.count {
+                self.edgeVertices[i].color = self.shadeColor.getGLTuple4(self.alpha)
+            }
+        }
+    }
+    override var alpha: CGFloat {
+        didSet {
+            for i in 0..<self.edgeVertices.count {
+                self.edgeVertices[i].color.3 = GLfloat(self.alpha)
+            }
+        }
+    }
+    
+    init(cell:VoronoiCell, color:SCVector3, thickness:CGFloat) {
         let vertices = cell.makeVertexLoop()
         var edgeVertices:[Vertex] = []
         let rotate90 = SCMatrix4(rotation2D: CGFloat(M_PI_2))
@@ -38,7 +53,7 @@ class GLSVoronoiEdgeSprite: GLSNode {
             let bl = vertex - normal * thickness
             let tr = next + normal * thickness
             let br = next - normal * thickness
-            var vs = [Vertex](repeating: Vertex(position: (0.0, 0.0), color: color.getGLTuple()), count: 6)
+            var vs = [Vertex](repeating: Vertex(position: (0.0, 0.0), color: color.getGLTuple4()), count: 6)
             vs[0].position = tl.getGLTuple()
             vs[1].position = bl.getGLTuple()
             vs[2].position = tr.getGLTuple()
@@ -53,8 +68,6 @@ class GLSVoronoiEdgeSprite: GLSNode {
     }
     
     override func render(_ model: SCMatrix4) {
-//        let childModel = self.modelMatrix() * model
-        
         self.edgeProgram.use()
         glBufferData(GLenum(GL_ARRAY_BUFFER), GLsizeiptr(MemoryLayout<Vertex>.size * self.edgeVertices.count), self.edgeVertices, GLenum(GL_STATIC_DRAW))
         

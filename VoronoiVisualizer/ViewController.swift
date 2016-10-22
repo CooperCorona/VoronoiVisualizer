@@ -11,7 +11,7 @@ import Cocoa
 import CoronaConvenience
 import CoronaStructures
 import CoronaGL
-@testable import Voronoi
+import Voronoi
 
 enum ParsePointError: Error {
     case Failed
@@ -25,6 +25,11 @@ extension CGPoint: Hashable {
 
 class ViewController: NSViewController {
 
+    enum ColorMode {
+        case Rainbow
+        case Hover
+    }
+    
     @IBOutlet weak var glView: OmniGLView2d!
     @IBOutlet var textView: NSTextView!
     @IBOutlet weak var sizeLabel: NSTextField!
@@ -32,11 +37,20 @@ class ViewController: NSViewController {
     @IBOutlet weak var columnTextField: NSTextField!
     
     var sprites:[GLSNode] = []
+    var edgeSprites:[GLSNode] = []
+    var pointSprites:[GLSSprite] = []
     var diagram:VoronoiDiagram? = nil
     var points:[CGPoint] = []
     var dragIndex:Int? = nil
     var initialMouseLocation = NSPoint.zero
     var initialDragPoint = NSPoint.zero
+    var currentHoverCellIndex:Int? = nil
+    
+    var colorMode = ColorMode.Rainbow {
+        didSet {
+            self.colorSprites()
+        }
+    }
     
     var undoStack = Stack<[CGPoint]>()
     var redoStack = Stack<[CGPoint]>()
@@ -52,7 +66,7 @@ class ViewController: NSViewController {
         ])
         self.glView.clearColor = SCVector4.blackColor
         // Do any additional setup after loading the view.
-        
+        Timer.scheduledTimer(timeInterval: 1.0 / 30.0, target: self, selector: #selector(updateTimer(sender:)), userInfo: nil, repeats: true)
     }
 
     override var representedObject: Any? {
@@ -103,34 +117,43 @@ class ViewController: NSViewController {
             let _ = self.glView.removeChild(s)
         }
         self.sprites = []
+        for s in self.edgeSprites {
+            let _ = self.glView.removeChild(s)
+        }
+        self.edgeSprites = []
+        for s in self.pointSprites {
+            let _ = self.glView.removeChild(s)
+        }
+        self.pointSprites = []
         
         let result = diagram.sweep()
         
         for (i, cell) in result.cells.enumerated() {
             
             let s = GLSVoronoiSprite(cell: cell, boundaries: self.glView.frame.size)
-            s.alpha = 0.75
-            s.shadeColor = SCVector3.rainbowColorAtIndex(i)
             self.glView.container.addChild(s)
             self.sprites.append(s)
             
-            let vs = GLSSprite(position: cell.voronoiPoint, size: CGSize(square: 12.0), texture: "White Circle")
+            let size = max(min(12.0, 36.0 / CGFloat(diagram.points.count) * 12.0), 4.0)
+            let vs = GLSSprite(position: cell.voronoiPoint, size: CGSize(square: size), texture: "White Circle")
             self.glView.container.addChild(vs)
-            self.sprites.append(vs)
+            self.pointSprites.append(vs)
             
-            let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector4.blackColor, thickness: 1.0)
+            let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector3.blackColor, thickness: 1.0)
             self.glView.addChild(es)
-            self.sprites.append(es)
+            self.edgeSprites.append(es)
         }
+        
+        self.colorSprites()
  
         
-        self.textView.string = diagram.points.reduce("") { (a:String, b:CGPoint) in
+        self.textView.string = diagram.points.sorted() { $0.y < $1.y } .reduce("") { (a:String, b:CGPoint) in
             "\(a)\(b.clampDecimals(6))\n"
         }
         
         let _ = self.textView.string!.removeLast()
  
-        
+        /*
         for edge in diagram.edges {
             let distance = edge.startPoint.distanceFrom(edge.endPoint)
             let angle = edge.startPoint.angleTo(edge.endPoint)
@@ -140,10 +163,40 @@ class ViewController: NSViewController {
             self.glView.addChild(s)
             self.sprites.append(s)
         }
+        */
  
         self.glView.display()
         self.diagram = diagram
         self.points = diagram.points
+    }
+    
+    func colorSprites() {
+        switch self.colorMode {
+        case .Rainbow:
+            self.colorDiagramRainbow()
+        case .Hover:
+            self.colorDiagramHover()
+        }
+    }
+    
+    func colorDiagramRainbow() {
+        for (i, sprite) in self.sprites.enumerated() {
+            sprite.stopAnimations()
+            sprite.shadeColor = SCVector3.rainbowColorAtIndex(i)
+        }
+        for edge in self.edgeSprites {
+            edge.shadeColor = SCVector3.blackColor
+        }
+    }
+    
+    func colorDiagramHover() {
+        for sprite in self.sprites {
+            sprite.stopAnimations()
+            sprite.shadeColor = SCVector3.blackColor
+        }
+        for edge in self.edgeSprites {
+            edge.shadeColor = SCVector3.whiteColor * 0.1
+        }
     }
     
     func createDiagramFor(points:[CGPoint]) {
@@ -281,6 +334,36 @@ class ViewController: NSViewController {
         return event.locationInWindow - self.glView.frame.origin
     }
     
+    override func mouseMoved(with event: NSEvent) {
+        guard self.colorMode == .Hover else {
+            return
+        }
+        guard let cells = self.diagram?.sweep().cells else {
+            return
+        }
+        let location = self.getGLLocation(event: event)
+        let duration:CGFloat = 1.0 / 7.5
+        if let cellIndex = cells.index(where: { $0.contains(point: location) }) {
+            if let lastCellIndex = self.currentHoverCellIndex {
+                GLSNode.animateWithDuration(duration) {
+                    self.sprites[lastCellIndex].shadeColor = SCVector3.blackColor
+                    let neighbors = cells[lastCellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
+                    for neighbor in neighbors {
+                        neighbor.shadeColor = SCVector3.blackColor
+                    }
+                }
+            }
+            self.currentHoverCellIndex = cellIndex
+            GLSNode.animateWithDuration(duration) {
+                self.sprites[cellIndex].shadeColor = SCVector3.redColor * 0.75
+                let neighbors = cells[cellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
+                for neighbor in neighbors {
+                    neighbor.shadeColor = SCVector3.redColor * 0.5
+                }
+            }
+        }
+    }
+    
     override func mouseDown(with event: NSEvent) {
         guard self.points.count <= 64 else {
             //Any more points, and the calculations become
@@ -326,6 +409,32 @@ class ViewController: NSViewController {
         let location = self.getGLLocation(event: event)
         self.points.append(location)
         self.createDiagramFor(points: self.points)
+    }
+    
+    @IBAction func colorModeChanged(_ sender: NSPopUpButton) {
+        guard let title = sender.selectedItem?.title else {
+            return
+        }
+        if title == "Rainbow" {
+            self.colorMode = .Rainbow
+        } else if title == "Hover" {
+            self.colorMode = .Hover
+        }
+        self.glView.display()
+    }
+    
+    func getSpriteFor(cell:VoronoiCell, in cells:[VoronoiCell]) -> GLSNode? {
+        for (i, sprite) in self.sprites.enumerated() {
+            if cells[i] === cell {
+                return sprite
+            }
+        }
+        return nil
+    }
+ 
+    func updateTimer(sender:Timer) {
+        self.glView.container.update(1.0 / 30.0)
+        self.glView.display()
     }
     
 }

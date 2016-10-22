@@ -10,6 +10,10 @@ import Cocoa
 
 class WindowResizeController: NSWindowController, NSWindowDelegate {
 
+    override func windowDidLoad() {
+        self.window?.acceptsMouseMovedEvents = true
+    }
+    
     func windowDidResize(_ notification: Notification) {
         (self.contentViewController as? ViewController)?.viewDidResize()
     }

@@ -68,6 +68,9 @@ class GLSVoronoiEdgeSprite: GLSNode {
     }
     
     override func render(_ model: SCMatrix4) {
+        if self.hidden {
+            return
+        }
         self.edgeProgram.use()
         glBufferData(GLenum(GL_ARRAY_BUFFER), GLsizeiptr(MemoryLayout<Vertex>.size * self.edgeVertices.count), self.edgeVertices, GLenum(GL_STATIC_DRAW))
         

@@ -23,11 +23,35 @@ extension CGPoint: Hashable {
     }
 }
 
+class MonoColorVoronoiCell: Hashable {
+    let cell:VoronoiCell
+    let sprite:GLSNode
+    let index:Int
+    var neighbors:[MonoColorVoronoiCell] = []
+    var colorIndex:Int? = nil
+    var hashValue:Int { return self.index }
+    
+    init(cell:VoronoiCell, sprite:GLSNode, index:Int) {
+        self.cell = cell
+        self.sprite = sprite
+        self.index = index
+    }
+    
+}
+
+func ==(lhs:MonoColorVoronoiCell, rhs:MonoColorVoronoiCell) -> Bool {
+    //In practice, this wouldn't work,
+    //but we always assign unique values
+    //to the index property, so it's fine.
+    return lhs.index == rhs.index
+}
+
 class ViewController: NSViewController {
 
     enum ColorMode {
         case Rainbow
         case Hover
+        case Mono(SCVector3)
     }
     
     @IBOutlet weak var glView: OmniGLView2d!
@@ -66,7 +90,7 @@ class ViewController: NSViewController {
         ])
         self.glView.clearColor = SCVector4.blackColor
         // Do any additional setup after loading the view.
-        Timer.scheduledTimer(timeInterval: 1.0 / 30.0, target: self, selector: #selector(updateTimer(sender:)), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: 1.0 / 15.0, target: self, selector: #selector(updateTimer(sender:)), userInfo: nil, repeats: true)
     }
 
     override var representedObject: Any? {
@@ -144,6 +168,7 @@ class ViewController: NSViewController {
             self.edgeSprites.append(es)
         }
         
+        self.currentHoverCellIndex = nil
         self.colorSprites()
  
         
@@ -176,6 +201,8 @@ class ViewController: NSViewController {
             self.colorDiagramRainbow()
         case .Hover:
             self.colorDiagramHover()
+        case let .Mono(color):
+            self.colorDiagramMono(color: color)
         }
     }
     
@@ -184,8 +211,12 @@ class ViewController: NSViewController {
             sprite.stopAnimations()
             sprite.shadeColor = SCVector3.rainbowColorAtIndex(i)
         }
+        for point in self.pointSprites {
+            point.hidden = false
+        }
         for edge in self.edgeSprites {
             edge.shadeColor = SCVector3.blackColor
+            edge.hidden = false
         }
     }
     
@@ -194,9 +225,79 @@ class ViewController: NSViewController {
             sprite.stopAnimations()
             sprite.shadeColor = SCVector3.blackColor
         }
+        for point in self.pointSprites {
+            point.hidden = false
+        }
         for edge in self.edgeSprites {
             edge.shadeColor = SCVector3.whiteColor * 0.1
+            edge.hidden = false
         }
+    }
+    
+    func colorDiagramMono(color:SCVector3) {
+        let shades:[CGFloat] = [0.9, 0.933, 0.967, 1.0]
+        let indices = [0, 1, 2, 3]
+        
+        guard let monoCells = self.getMonoCells() else {
+            return
+        }
+        
+        /*for sprite in self.sprites {
+            sprite.shadeColor = color * shades.randomObject()!
+        }*/
+        for point in self.pointSprites {
+            point.hidden = true
+        }
+        for edge in self.edgeSprites {
+            edge.hidden = true
+        }
+        
+        guard let first = monoCells.first else {
+            return
+        }
+        
+        //This algorithm is designed so that no 2 adjacent cells
+        //have the same color. It doesn't work perfectly, but it
+        //works for the majority of cells.
+        var markedNodes = Set<MonoColorVoronoiCell>()
+        var queue = Queue<MonoColorVoronoiCell>()
+        queue.enqueue(first)
+        
+        while let top = queue.dequeue() {
+            if markedNodes.contains(top) {
+                continue
+            }
+            
+            let validIndices = indices.filter() { i in !top.neighbors.contains() { n in n.colorIndex == i } }
+            var index = indices.randomElement()!
+            if let colorIndex = validIndices.randomElement() {
+                index = colorIndex
+            }
+            
+            top.colorIndex = index
+//            top.sprite.shadeColor = SCVector3.rainbowColorAtIndex(index)
+            top.sprite.shadeColor = color * shades[index]
+            markedNodes.insert(top)
+            for neighbor in top.neighbors {
+                queue.enqueue(neighbor)
+            }
+        }
+    }
+    
+    private func getMonoCells() -> [MonoColorVoronoiCell]? {
+        
+        guard let cells = self.diagram?.sweep().cells else {
+            return nil
+        }
+        var monoCells:[MonoColorVoronoiCell] = []
+        for (i, cell) in cells.enumerated() {
+            monoCells.append(MonoColorVoronoiCell(cell: cell, sprite: self.getSpriteFor(cell: cell, in: cells)!, index: i))
+        }
+        for cell in monoCells {
+            let cellNeighbors = cell.cell.neighbors
+            cell.neighbors = monoCells.filter() { m in cellNeighbors.contains() { c in m.cell === c } }
+        }
+        return monoCells
     }
     
     func createDiagramFor(points:[CGPoint]) {
@@ -335,7 +436,10 @@ class ViewController: NSViewController {
     }
     
     override func mouseMoved(with event: NSEvent) {
-        guard self.colorMode == .Hover else {
+        switch self.colorMode {
+        case .Hover:
+            break
+        default:
             return
         }
         guard let cells = self.diagram?.sweep().cells else {
@@ -419,6 +523,14 @@ class ViewController: NSViewController {
             self.colorMode = .Rainbow
         } else if title == "Hover" {
             self.colorMode = .Hover
+        } else if title == "Mono" {
+            let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorSliderController") as! ColorSliderController
+            colorController.dismissHandler = { color in
+                self.colorMode = .Mono(color.getVector3())
+                self.glView.display()
+            }
+            self.presentViewControllerAsSheet(colorController)
+            return
         }
         self.glView.display()
     }

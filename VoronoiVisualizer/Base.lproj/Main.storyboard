@@ -816,6 +816,7 @@
                                         <items>
                                             <menuItem title="Rainbow" state="on" id="RcN-nt-4bM"/>
                                             <menuItem title="Hover" id="whP-XT-ca1"/>
+                                            <menuItem title="Mono" id="64w-c1-l1n"/>
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
@@ -865,6 +866,83 @@
             </objects>
             <point key="canvasLocation" x="75" y="655"/>
         </scene>
+        <!--Color Slider Controller-->
+        <scene sceneID="Zha-WR-wnU">
+            <objects>
+                <viewController identifier="colorSliderController" storyboardIdentifier="colorSliderController" id="Zh3-rT-Lot" customClass="ColorSliderController" customModule="VoronoiVisualizer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="KOP-qW-MhB">
+                        <rect key="frame" x="0.0" y="0.0" width="292" height="206"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zf9-gz-xRf">
+                                <rect key="frame" x="128" y="169" width="37" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Color" id="sOu-J8-9II">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gcd-7q-kCJ">
+                                <rect key="frame" x="110" y="52" width="72" height="32"/>
+                                <buttonCell key="cell" type="push" title="Done" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Qdb-EJ-TDx">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="doneButtonPressed:" target="Zh3-rT-Lot" id="MET-5x-9jV"/>
+                                </connections>
+                            </button>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FGE-yO-BrE">
+                                <rect key="frame" x="14" y="144" width="264" height="19"/>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="fEx-O9-ex8"/>
+                                <connections>
+                                    <action selector="sliderChanged:" target="Zh3-rT-Lot" id="QZX-GJ-quT"/>
+                                </connections>
+                            </slider>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KqC-ZB-SEX">
+                                <rect key="frame" x="14" y="121" width="264" height="19"/>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="TCf-YN-Qhp"/>
+                                <connections>
+                                    <action selector="sliderChanged:" target="Zh3-rT-Lot" id="tQh-dh-a0U"/>
+                                </connections>
+                            </slider>
+                            <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2BS-Tp-D4x">
+                                <rect key="frame" x="14" y="98" width="264" height="19"/>
+                                <sliderCell key="cell" state="on" alignment="left" maxValue="1" doubleValue="0.5" tickMarkPosition="above" sliderType="linear" id="0MN-cJ-BsB"/>
+                                <connections>
+                                    <action selector="sliderChanged:" target="Zh3-rT-Lot" id="ZHu-6p-Mo5"/>
+                                </connections>
+                            </slider>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="KqC-ZB-SEX" secondAttribute="trailing" constant="16" id="4Sd-kK-qPA"/>
+                            <constraint firstAttribute="trailing" secondItem="FGE-yO-BrE" secondAttribute="trailing" constant="16" id="4g8-t3-O9o"/>
+                            <constraint firstItem="2BS-Tp-D4x" firstAttribute="leading" secondItem="KOP-qW-MhB" secondAttribute="leading" constant="16" id="5Js-rt-Hjd"/>
+                            <constraint firstItem="Gcd-7q-kCJ" firstAttribute="top" secondItem="2BS-Tp-D4x" secondAttribute="bottom" constant="20" id="E8R-ud-Kgd"/>
+                            <constraint firstItem="KqC-ZB-SEX" firstAttribute="leading" secondItem="KOP-qW-MhB" secondAttribute="leading" constant="16" id="EAi-Ae-SFT"/>
+                            <constraint firstAttribute="trailing" secondItem="2BS-Tp-D4x" secondAttribute="trailing" constant="16" id="GJX-qd-ANo"/>
+                            <constraint firstItem="FGE-yO-BrE" firstAttribute="leading" secondItem="KOP-qW-MhB" secondAttribute="leading" constant="16" id="GXC-8b-r4F"/>
+                            <constraint firstItem="KqC-ZB-SEX" firstAttribute="top" secondItem="FGE-yO-BrE" secondAttribute="bottom" constant="8" id="NgR-i5-XHj"/>
+                            <constraint firstItem="FGE-yO-BrE" firstAttribute="top" secondItem="zf9-gz-xRf" secondAttribute="bottom" constant="8" id="f51-Fh-Uqa"/>
+                            <constraint firstItem="2BS-Tp-D4x" firstAttribute="top" secondItem="KqC-ZB-SEX" secondAttribute="bottom" constant="8" id="fZX-d3-seN"/>
+                            <constraint firstItem="KqC-ZB-SEX" firstAttribute="centerX" secondItem="KOP-qW-MhB" secondAttribute="centerX" id="fb1-pz-Eox"/>
+                            <constraint firstItem="FGE-yO-BrE" firstAttribute="centerX" secondItem="KOP-qW-MhB" secondAttribute="centerX" id="hGg-XA-dSI"/>
+                            <constraint firstItem="Gcd-7q-kCJ" firstAttribute="centerX" secondItem="KOP-qW-MhB" secondAttribute="centerX" id="if2-hG-0qc"/>
+                            <constraint firstItem="zf9-gz-xRf" firstAttribute="top" secondItem="KOP-qW-MhB" secondAttribute="top" constant="20" id="l4n-Ly-0Z2"/>
+                            <constraint firstItem="zf9-gz-xRf" firstAttribute="centerX" secondItem="KOP-qW-MhB" secondAttribute="centerX" id="nBy-9R-GjG"/>
+                            <constraint firstItem="2BS-Tp-D4x" firstAttribute="centerX" secondItem="KOP-qW-MhB" secondAttribute="centerX" id="qp7-R4-lYG"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="blueSlider" destination="2BS-Tp-D4x" id="M5r-hM-QYS"/>
+                        <outlet property="greenSlider" destination="KqC-ZB-SEX" id="zvb-Om-udW"/>
+                        <outlet property="redSlider" destination="FGE-yO-BrE" id="zbD-Li-x5C"/>
+                    </connections>
+                </viewController>
+                <customObject id="qca-4k-8LI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="519.5" y="623"/>
+        </scene>
         <!--Tree Controller-->
         <scene sceneID="4qb-pa-FMi">
             <objects>
@@ -892,7 +970,7 @@
                 </viewController>
                 <customObject id="LoG-yx-Vh0" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="928" y="655"/>
+            <point key="canvasLocation" x="963" y="0.0"/>
         </scene>
     </scenes>
 </document>

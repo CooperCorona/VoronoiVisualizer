@@ -86,11 +86,12 @@ class ViewController: NSViewController {
         CCTextureOrganizer.sharedInstance.loadTextures()
         ShaderHelper.sharedInstance.loadPrograms([
             "Basic Shader":"BasicShader",
-            "Color Shader":"ColorShader"
+            "Color Shader":"ColorShader",
+            "Color Wheel Shader":"ColorWheelShader"
         ])
         self.glView.clearColor = SCVector4.blackColor
+        
         // Do any additional setup after loading the view.
-        Timer.scheduledTimer(timeInterval: 1.0 / 15.0, target: self, selector: #selector(updateTimer(sender:)), userInfo: nil, repeats: true)
     }
 
     override var representedObject: Any? {
@@ -446,26 +447,26 @@ class ViewController: NSViewController {
             return
         }
         let location = self.getGLLocation(event: event)
-        let duration:CGFloat = 1.0 / 7.5
+        var lastIndex = self.currentHoverCellIndex
         if let cellIndex = cells.index(where: { $0.contains(point: location) }) {
             if let lastCellIndex = self.currentHoverCellIndex {
-                GLSNode.animateWithDuration(duration) {
-                    self.sprites[lastCellIndex].shadeColor = SCVector3.blackColor
-                    let neighbors = cells[lastCellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
-                    for neighbor in neighbors {
-                        neighbor.shadeColor = SCVector3.blackColor
-                    }
+                self.sprites[lastCellIndex].shadeColor = SCVector3.blackColor
+                let neighbors = cells[lastCellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
+                for neighbor in neighbors {
+                    neighbor.shadeColor = SCVector3.blackColor
                 }
             }
             self.currentHoverCellIndex = cellIndex
-            GLSNode.animateWithDuration(duration) {
-                self.sprites[cellIndex].shadeColor = SCVector3.redColor * 0.75
-                let neighbors = cells[cellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
-                for neighbor in neighbors {
-                    neighbor.shadeColor = SCVector3.redColor * 0.5
-                }
+            self.sprites[cellIndex].shadeColor = SCVector3.redColor * 0.75
+            let neighbors = cells[cellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
+            for neighbor in neighbors {
+                neighbor.shadeColor = SCVector3.redColor * 0.5
+            }
+            if lastIndex != cellIndex {
+                self.glView.display()
             }
         }
+        
     }
     
     override func mouseDown(with event: NSEvent) {
@@ -493,6 +494,9 @@ class ViewController: NSViewController {
     
     override func mouseDragged(with event: NSEvent) {
         guard let dragIndex = self.dragIndex else {
+            return
+        }
+        guard self.points.count <= 64 else {
             return
         }
         let location = self.getGLLocation(event: event)
@@ -542,11 +546,6 @@ class ViewController: NSViewController {
             }
         }
         return nil
-    }
- 
-    func updateTimer(sender:Timer) {
-        self.glView.container.update(1.0 / 30.0)
-        self.glView.display()
     }
     
 }

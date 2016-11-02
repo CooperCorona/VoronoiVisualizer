@@ -876,12 +876,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="292" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <openGLView misplaced="YES" useAuxiliaryDepthBufferStencil="NO" allowOffline="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ypq-CL-7hB" customClass="ColorWheelView" customModule="VoronoiVisualizer" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="134" height="123"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="Ypq-CL-7hB" secondAttribute="height" multiplier="1:1" id="M8s-Kl-uOO"/>
-                                </constraints>
-                            </openGLView>
                             <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L4J-XK-5Bt">
                                 <rect key="frame" x="176" y="101" width="96" height="22"/>
                                 <constraints>
@@ -973,33 +967,38 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8kr-wi-kwb" customClass="ColorWheelViewWrapper" customModule="VoronoiVisualizer" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="123" height="119"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="8kr-wi-kwb" secondAttribute="height" multiplier="1:1" id="fWs-9f-PSo"/>
+                                </constraints>
+                            </customView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="dQN-mF-ryp" firstAttribute="centerX" secondItem="Ypq-CL-7hB" secondAttribute="centerX" id="09X-ZG-JCD"/>
+                            <constraint firstItem="8kr-wi-kwb" firstAttribute="top" secondItem="L4J-XK-5Bt" secondAttribute="top" id="1Uq-aV-f8S"/>
                             <constraint firstItem="KiY-Gh-b4p" firstAttribute="centerY" secondItem="i0V-f6-NBi" secondAttribute="centerY" id="1fp-JS-4b5"/>
                             <constraint firstAttribute="bottom" secondItem="IOJ-2i-tHK" secondAttribute="bottom" constant="8" id="2Ms-Jf-B7F"/>
+                            <constraint firstItem="8kr-wi-kwb" firstAttribute="top" secondItem="dQN-mF-ryp" secondAttribute="bottom" constant="8" id="3D9-rS-3HI"/>
                             <constraint firstItem="IOJ-2i-tHK" firstAttribute="leading" secondItem="f2n-Pw-8FO" secondAttribute="trailing" constant="8" id="42v-aK-qVL"/>
-                            <constraint firstItem="Ypq-CL-7hB" firstAttribute="leading" secondItem="KOP-qW-MhB" secondAttribute="leading" id="8s1-QC-F6T"/>
-                            <constraint firstItem="Ypq-CL-7hB" firstAttribute="top" secondItem="L4J-XK-5Bt" secondAttribute="top" id="9k9-oT-393"/>
+                            <constraint firstItem="xPT-sP-Ya2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8kr-wi-kwb" secondAttribute="trailing" constant="32" id="8UM-st-GXQ"/>
+                            <constraint firstItem="8kr-wi-kwb" firstAttribute="trailing" secondItem="dQN-mF-ryp" secondAttribute="trailing" constant="8" id="9LG-IV-hi3"/>
                             <constraint firstAttribute="trailing" secondItem="IOJ-2i-tHK" secondAttribute="trailing" constant="20" id="9zi-Ha-mmn"/>
                             <constraint firstItem="f2n-Pw-8FO" firstAttribute="centerY" secondItem="IOJ-2i-tHK" secondAttribute="centerY" id="BEE-Th-tek"/>
                             <constraint firstItem="VrS-8U-HfV" firstAttribute="leading" secondItem="tDn-UX-NMZ" secondAttribute="trailing" constant="8" id="GI2-2N-b2S"/>
                             <constraint firstItem="ovC-dT-OMW" firstAttribute="centerX" secondItem="dQN-mF-ryp" secondAttribute="centerX" id="Gvr-Hc-1Bi"/>
-                            <constraint firstItem="dQN-mF-ryp" firstAttribute="trailing" secondItem="Ypq-CL-7hB" secondAttribute="trailing" constant="-8" id="Myx-EH-VnU"/>
+                            <constraint firstItem="8kr-wi-kwb" firstAttribute="leading" secondItem="KOP-qW-MhB" secondAttribute="leading" id="PWR-Ke-xzj"/>
                             <constraint firstItem="i0V-f6-NBi" firstAttribute="top" secondItem="L4J-XK-5Bt" secondAttribute="bottom" constant="8" id="UOg-D3-Djw"/>
                             <constraint firstAttribute="trailing" secondItem="L4J-XK-5Bt" secondAttribute="trailing" constant="20" id="Wdq-t7-P51"/>
+                            <constraint firstAttribute="bottom" secondItem="8kr-wi-kwb" secondAttribute="bottom" id="aNP-6e-ii1"/>
                             <constraint firstAttribute="trailing" secondItem="VrS-8U-HfV" secondAttribute="trailing" constant="20" id="b7I-H8-yFC"/>
                             <constraint firstItem="dQN-mF-ryp" firstAttribute="top" secondItem="ovC-dT-OMW" secondAttribute="bottom" constant="8" id="fao-vj-x5h"/>
+                            <constraint firstItem="8kr-wi-kwb" firstAttribute="leading" secondItem="dQN-mF-ryp" secondAttribute="leading" constant="-8" id="gvZ-2a-vxZ"/>
                             <constraint firstItem="i0V-f6-NBi" firstAttribute="leading" secondItem="KiY-Gh-b4p" secondAttribute="trailing" constant="8" id="hUN-Nl-dcA"/>
                             <constraint firstAttribute="trailing" secondItem="i0V-f6-NBi" secondAttribute="trailing" constant="20" id="jxF-9w-yVs"/>
                             <constraint firstItem="IOJ-2i-tHK" firstAttribute="top" secondItem="VrS-8U-HfV" secondAttribute="bottom" constant="8" id="k58-Ok-veH"/>
-                            <constraint firstAttribute="bottom" secondItem="Ypq-CL-7hB" secondAttribute="bottom" id="mUP-CN-x0w"/>
-                            <constraint firstItem="dQN-mF-ryp" firstAttribute="leading" secondItem="Ypq-CL-7hB" secondAttribute="leading" constant="8" id="oPd-bj-3U7"/>
-                            <constraint firstItem="Ypq-CL-7hB" firstAttribute="top" secondItem="dQN-mF-ryp" secondAttribute="bottom" constant="4" id="qGM-2e-qjY"/>
                             <constraint firstItem="VrS-8U-HfV" firstAttribute="top" secondItem="i0V-f6-NBi" secondAttribute="bottom" constant="8" id="sLC-H2-qbw"/>
                             <constraint firstItem="L4J-XK-5Bt" firstAttribute="leading" secondItem="xPT-sP-Ya2" secondAttribute="trailing" constant="8" id="uLI-Xc-zno"/>
                             <constraint firstItem="xPT-sP-Ya2" firstAttribute="centerY" secondItem="L4J-XK-5Bt" secondAttribute="centerY" id="vyC-GY-lUX"/>
-                            <constraint firstItem="xPT-sP-Ya2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ypq-CL-7hB" secondAttribute="trailing" constant="32" id="w3R-WS-DeL"/>
                             <constraint firstItem="tDn-UX-NMZ" firstAttribute="centerY" secondItem="VrS-8U-HfV" secondAttribute="centerY" id="x8X-8z-16d"/>
                         </constraints>
                     </view>
@@ -1007,7 +1006,7 @@
                         <outlet property="alphaTextField" destination="IOJ-2i-tHK" id="J9J-x0-KVq"/>
                         <outlet property="blueTextField" destination="VrS-8U-HfV" id="SdR-f6-rzb"/>
                         <outlet property="brightnessSlider" destination="dQN-mF-ryp" id="uYd-tb-7zz"/>
-                        <outlet property="colorWheel" destination="Ypq-CL-7hB" id="fed-EK-VKh"/>
+                        <outlet property="colorWheelWrapper" destination="8kr-wi-kwb" id="LXl-uZ-4eu"/>
                         <outlet property="greenTextField" destination="i0V-f6-NBi" id="JbG-tg-YEK"/>
                         <outlet property="redTextField" destination="L4J-XK-5Bt" id="G8g-rj-6E6"/>
                     </connections>

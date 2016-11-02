@@ -529,10 +529,6 @@ class ViewController: NSViewController {
             self.colorMode = .Hover
         } else if title == "Mono" {
             let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorSliderController") as! ColorSliderController
-            colorController.dismissHandler = { color in
-                self.colorMode = .Mono(color.getVector3())
-                self.glView.display()
-            }
             self.presentViewControllerAsSheet(colorController)
             return
         }

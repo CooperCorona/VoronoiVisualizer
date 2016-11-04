@@ -8,6 +8,10 @@
 
 import Cocoa
 
+protocol ResizableViewController {
+    func viewDidResize()
+}
+
 class WindowResizeController: NSWindowController, NSWindowDelegate {
 
     override func windowDidLoad() {
@@ -15,7 +19,7 @@ class WindowResizeController: NSWindowController, NSWindowDelegate {
     }
     
     func windowDidResize(_ notification: Notification) {
-        (self.contentViewController as? ViewController)?.viewDidResize()
+        (self.contentViewController as? ResizableViewController)?.viewDidResize()
     }
     
 }

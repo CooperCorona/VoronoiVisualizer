@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <Atlases>
 
-<WhiteTile data="WhiteTile, png, 1, 1" keys="White Tile" size="{1, 1}"/>
-<WhiteCircle data="WhiteCircle, pdf, 256, 256" keys="White Circle" size="{256, 256}"/>
+    <WhiteTile data="WhiteTile, png, 1, 1" keys="White Tile" size="{1, 1}"/>
+    <WhiteCircle data="WhiteCircle, pdf, 256, 256" keys="White Circle" size="{256, 256}"/>
+    <CheckeredBackground data="CheckeredBackground, png, 48, 48" keys="Checkered Background" size="{48, 48}"/>
 
 </Atlases>

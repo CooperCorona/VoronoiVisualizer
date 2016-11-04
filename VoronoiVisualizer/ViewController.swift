@@ -46,12 +46,12 @@ func ==(lhs:MonoColorVoronoiCell, rhs:MonoColorVoronoiCell) -> Bool {
     return lhs.index == rhs.index
 }
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, ResizableViewController {
 
     enum ColorMode {
         case Rainbow
         case Hover
-        case Mono(SCVector3)
+        case Mono([SCVector3])
     }
     
     @IBOutlet weak var glView: OmniGLView2d!
@@ -79,6 +79,8 @@ class ViewController: NSViewController {
     var undoStack = Stack<[CGPoint]>()
     var redoStack = Stack<[CGPoint]>()
     
+    var checkerBackground:GLSCheckerSprite? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         GLSFrameBuffer.globalContext.makeCurrentContext()
@@ -87,13 +89,17 @@ class ViewController: NSViewController {
         ShaderHelper.sharedInstance.loadPrograms([
             "Basic Shader":"BasicShader",
             "Color Shader":"ColorShader",
-            "Color Wheel Shader":"ColorWheelShader"
+            "Color Wheel Shader":"ColorWheelShader",
+            "Checker Shader":"CheckerShader"
         ])
         self.glView.clearColor = SCVector4.blackColor
         
+        self.checkerBackground = GLSCheckerSprite(off: SCVector4.lightGrayColor, on: SCVector4.whiteColor, size: self.glView.frame.size)
+        self.checkerBackground?.anchor = CGPoint.zero
+        self.glView.container.addChild(self.checkerBackground!)
         // Do any additional setup after loading the view.
     }
-
+ 
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
@@ -171,7 +177,6 @@ class ViewController: NSViewController {
         
         self.currentHoverCellIndex = nil
         self.colorSprites()
- 
         
         self.textView.string = diagram.points.sorted() { $0.y < $1.y } .reduce("") { (a:String, b:CGPoint) in
             "\(a)\(b.clampDecimals(6))\n"
@@ -203,7 +208,7 @@ class ViewController: NSViewController {
         case .Hover:
             self.colorDiagramHover()
         case let .Mono(color):
-            self.colorDiagramMono(color: color)
+            self.colorDiagramMono(colors: color)
         }
     }
     
@@ -235,9 +240,11 @@ class ViewController: NSViewController {
         }
     }
     
-    func colorDiagramMono(color:SCVector3) {
-        let shades:[CGFloat] = [0.9, 0.933, 0.967, 1.0]
-        let indices = [0, 1, 2, 3]
+    func colorDiagramMono(colors:[SCVector3]) {
+        var indices:[Int] = []
+        for i in 0..<colors.count {
+            indices.append(i)
+        }
         
         guard let monoCells = self.getMonoCells() else {
             return
@@ -277,7 +284,7 @@ class ViewController: NSViewController {
             
             top.colorIndex = index
 //            top.sprite.shadeColor = SCVector3.rainbowColorAtIndex(index)
-            top.sprite.shadeColor = color * shades[index]
+            top.sprite.shadeColor = colors[index]
             markedNodes.insert(top)
             for neighbor in top.neighbors {
                 queue.enqueue(neighbor)
@@ -317,6 +324,7 @@ class ViewController: NSViewController {
 
     func viewDidResize() {
         self.sizeLabel.stringValue = "Size: \(self.glView.frame.size)"
+        self.checkerBackground?.contentSize = self.glView.frame.size
     }
     
     func split(string:String) -> [String] {
@@ -530,6 +538,10 @@ class ViewController: NSViewController {
         } else if title == "Mono" {
             let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorSliderController") as! ColorSliderController
             self.presentViewControllerAsSheet(colorController)
+            colorController.dismissHandler = { colors in
+                self.colorMode = .Mono(colors.map() { $0.getVector3() })
+                self.glView.display()
+            }
             return
         }
         self.glView.display()

@@ -174,9 +174,13 @@ open class ColorWheelViewWrapper: NSView {
     }
     
     private func moveKnobFor(hue:CGFloat, saturation:CGFloat) {
-        let angle = CGFloat(2.0 * M_PI) * hue
-        let radius = (1.0 - saturation) * self.frame.width / 2.0
-        self.knobImage.frame.center = self.frame.size.center + CGPoint(angle: angle, length: radius)
+        if saturation ~= 0.0 {
+            self.knobImage.frame.center = self.frame.size.center
+        } else {
+            let angle = CGFloat(2.0 * M_PI) * hue
+            let radius = (1.0 - saturation) * self.frame.width / 2.0
+            self.knobImage.frame.center = self.frame.size.center + CGPoint(angle: angle, length: radius)
+        }
     }
     
     open override func mouseDown(with event: NSEvent) {
@@ -227,6 +231,11 @@ open class ColorWheelViewWrapper: NSView {
         self.delegate?.colorChanged?(hue: hue, saturation: saturation, brightness: self.colorWheel.brightness, alpha: self.colorWheel.wheelAlpha)
         let rgb = self.convertToRGB(hue: hue, saturation: saturation, brightness: self.brightness)
         self.delegate?.colorChanged?(red: rgb.x, green: rgb.y, blue: rgb.z, alpha: self.colorWheel.wheelAlpha)
+    }
+    
+    open override func display() {
+        super.display()
+        self.colorWheel.display()
     }
     
 }

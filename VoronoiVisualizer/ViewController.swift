@@ -23,58 +23,40 @@ extension CGPoint: Hashable {
     }
 }
 
-class MonoColorVoronoiCell: Hashable {
-    let cell:VoronoiCell
-    let sprite:GLSNode
-    let index:Int
-    var neighbors:[MonoColorVoronoiCell] = []
-    var colorIndex:Int? = nil
-    var hashValue:Int { return self.index }
-    
-    init(cell:VoronoiCell, sprite:GLSNode, index:Int) {
-        self.cell = cell
-        self.sprite = sprite
-        self.index = index
-    }
-    
-}
+class ViewController: NSViewController, ResizableViewController, NSTextFieldDelegate {
 
-func ==(lhs:MonoColorVoronoiCell, rhs:MonoColorVoronoiCell) -> Bool {
-    //In practice, this wouldn't work,
-    //but we always assign unique values
-    //to the index property, so it's fine.
-    return lhs.index == rhs.index
-}
-
-class ViewController: NSViewController {
-
-    enum ColorMode {
-        case Rainbow
-        case Hover
-        case Mono(SCVector3)
+    enum TextFieldTag: Int, Hashable {
+        case Rows       = 0
+        case Columns    = 1
+        case Width      = 2
+        case Height     = 3
+        
+        var hashValue:Int { return self.rawValue }
     }
     
     @IBOutlet weak var glView: OmniGLView2d!
+    lazy var voronoiView:VoronoiView = VoronoiView(glView: self.glView)
     @IBOutlet var textView: NSTextView!
-    @IBOutlet weak var sizeLabel: NSTextField!
     @IBOutlet weak var rowTextField: NSTextField!
     @IBOutlet weak var columnTextField: NSTextField!
+    @IBOutlet weak var widthTextField: NSTextField!
+    @IBOutlet weak var heightTextField: NSTextField!
+    @IBOutlet weak var edgesCheckbox: NSButton!
+    @IBOutlet weak var pointsCheckbox: NSButton!
+    var previousText:[TextFieldTag:String] = [:]
+    var bufferSize:CGSize {
+        get { return CGSize(width: self.widthTextField.doubleValue, height: self.heightTextField.doubleValue) }
+        set {
+            self.widthTextField.doubleValue  = Double(newValue.width)
+            self.heightTextField.doubleValue = Double(newValue.height)
+        }
+    }
     
-    var sprites:[GLSNode] = []
-    var edgeSprites:[GLSNode] = []
-    var pointSprites:[GLSSprite] = []
-    var diagram:VoronoiDiagram? = nil
     var points:[CGPoint] = []
     var dragIndex:Int? = nil
     var initialMouseLocation = NSPoint.zero
     var initialDragPoint = NSPoint.zero
     var currentHoverCellIndex:Int? = nil
-    
-    var colorMode = ColorMode.Rainbow {
-        didSet {
-            self.colorSprites()
-        }
-    }
     
     var undoStack = Stack<[CGPoint]>()
     var redoStack = Stack<[CGPoint]>()
@@ -86,13 +68,30 @@ class ViewController: NSViewController {
         CCTextureOrganizer.sharedInstance.loadTextures()
         ShaderHelper.sharedInstance.loadPrograms([
             "Basic Shader":"BasicShader",
-            "Color Shader":"ColorShader"
+            "Color Shader":"ColorShader",
+            "Color Wheel Shader":"ColorWheelShader",
+            "Checker Shader":"CheckerShader"
         ])
         self.glView.clearColor = SCVector4.blackColor
-        // Do any additional setup after loading the view.
-        Timer.scheduledTimer(timeInterval: 1.0 / 15.0, target: self, selector: #selector(updateTimer(sender:)), userInfo: nil, repeats: true)
-    }
 
+        self.rowTextField.delegate      = self
+        self.columnTextField.delegate   = self
+        self.widthTextField.delegate    = self
+        self.heightTextField.delegate   = self
+        self.previousText[.Rows]    = self.rowTextField.stringValue
+        self.previousText[.Columns] = self.columnTextField.stringValue
+        self.previousText[.Width]   = self.widthTextField.stringValue
+        self.previousText[.Height]  = self.heightTextField.stringValue
+        
+        self.voronoiView.colors = SCVector4.rainbowColors
+        self.voronoiView.viewDidResize()
+    }
+ 
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        NotificationCenter.default.addObserver(self, selector: #selector(exportButtonPressed), name: Notification.Name(rawValue: AppDelegate.ExportImageNotification), object: nil)
+    }
+    
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
@@ -123,200 +122,52 @@ class ViewController: NSViewController {
             self.displayAlert(text: "Number of points must be greater than 1.")
             return
         }
-        let diagram = VoronoiDiagram.createWithSize(self.glView.frame.size, rows: rows, columns: columns, range: 1.0)
+        self.voronoiView.size = CGSize(width: self.widthTextField.doubleValue, height: self.heightTextField.doubleValue)
+        self.voronoiView.calculateRandom(rows: rows, columns: columns)
+        self.voronoiView.display()
         
-        if let oldDiagram = self.diagram {
-            //Add undo, remove all redos
-            self.undoStack.push(oldDiagram.points)
-            while self.redoStack.count > 0 {
-                let _ = self.redoStack.pop()
-            }
-        }
-        
-        self.display(diagram: diagram)
+        self.setPointText()
     }
     
-    func display(diagram:VoronoiDiagram) {
-        for s in self.sprites {
-            let _ = self.glView.removeChild(s)
+    func setPointText() {
+        self.points = self.voronoiView.points
+        var str = ""
+        for point in self.points {
+            str = "\(str)\(point.clampDecimals(2))\n"
         }
-        self.sprites = []
-        for s in self.edgeSprites {
-            let _ = self.glView.removeChild(s)
+        self.textView.string = str
+    }
+    
+    override func controlTextDidChange(_ obj: Notification) {
+        guard let textField = obj.object as? NSTextField else {
+            return
         }
-        self.edgeSprites = []
-        for s in self.pointSprites {
-            let _ = self.glView.removeChild(s)
-        }
-        self.pointSprites = []
-        
-        let result = diagram.sweep()
-        
-        for (i, cell) in result.cells.enumerated() {
-            
-            let s = GLSVoronoiSprite(cell: cell, boundaries: self.glView.frame.size)
-            self.glView.container.addChild(s)
-            self.sprites.append(s)
-            
-            let size = max(min(12.0, 36.0 / CGFloat(diagram.points.count) * 12.0), 4.0)
-            let vs = GLSSprite(position: cell.voronoiPoint, size: CGSize(square: size), texture: "White Circle")
-            self.glView.container.addChild(vs)
-            self.pointSprites.append(vs)
-            
-            let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector3.blackColor, thickness: 1.0)
-            self.glView.addChild(es)
-            self.edgeSprites.append(es)
+        guard let fieldType = TextFieldTag(rawValue: textField.tag) else {
+            return
         }
         
-        self.currentHoverCellIndex = nil
-        self.colorSprites()
- 
-        
-        self.textView.string = diagram.points.sorted() { $0.y < $1.y } .reduce("") { (a:String, b:CGPoint) in
-            "\(a)\(b.clampDecimals(6))\n"
+        if textField.stringValue.matchesRegex("^\\d+$") {
+            if textField.integerValue < 1 {
+                textField.stringValue = "1"
+            } else if textField.integerValue > 1024 {
+                textField.stringValue = "1024"
+            }
+            self.previousText[fieldType] = textField.stringValue
+        } else {
+            textField.stringValue = self.previousText[fieldType]!
         }
         
-        let _ = self.textView.string!.removeLast()
- 
-        /*
-        for edge in diagram.edges {
-            let distance = edge.startPoint.distanceFrom(edge.endPoint)
-            let angle = edge.startPoint.angleTo(edge.endPoint)
-            let s = GLSSprite(position: edge.startPoint, size: CGSize(width: distance, height: 4.0), texture: "White Tile")
-            s.anchor = CGPoint(x: 0.0, y: 0.5)
-            s.rotation = angle
-            self.glView.addChild(s)
-            self.sprites.append(s)
-        }
-        */
- 
+    }
+    
+    func display() {
         self.glView.display()
-        self.diagram = diagram
-        self.points = diagram.points
     }
     
-    func colorSprites() {
-        switch self.colorMode {
-        case .Rainbow:
-            self.colorDiagramRainbow()
-        case .Hover:
-            self.colorDiagramHover()
-        case let .Mono(color):
-            self.colorDiagramMono(color: color)
-        }
-    }
-    
-    func colorDiagramRainbow() {
-        for (i, sprite) in self.sprites.enumerated() {
-            sprite.stopAnimations()
-            sprite.shadeColor = SCVector3.rainbowColorAtIndex(i)
-        }
-        for point in self.pointSprites {
-            point.hidden = false
-        }
-        for edge in self.edgeSprites {
-            edge.shadeColor = SCVector3.blackColor
-            edge.hidden = false
-        }
-    }
-    
-    func colorDiagramHover() {
-        for sprite in self.sprites {
-            sprite.stopAnimations()
-            sprite.shadeColor = SCVector3.blackColor
-        }
-        for point in self.pointSprites {
-            point.hidden = false
-        }
-        for edge in self.edgeSprites {
-            edge.shadeColor = SCVector3.whiteColor * 0.1
-            edge.hidden = false
-        }
-    }
-    
-    func colorDiagramMono(color:SCVector3) {
-        let shades:[CGFloat] = [0.9, 0.933, 0.967, 1.0]
-        let indices = [0, 1, 2, 3]
-        
-        guard let monoCells = self.getMonoCells() else {
-            return
-        }
-        
-        /*for sprite in self.sprites {
-            sprite.shadeColor = color * shades.randomObject()!
-        }*/
-        for point in self.pointSprites {
-            point.hidden = true
-        }
-        for edge in self.edgeSprites {
-            edge.hidden = true
-        }
-        
-        guard let first = monoCells.first else {
-            return
-        }
-        
-        //This algorithm is designed so that no 2 adjacent cells
-        //have the same color. It doesn't work perfectly, but it
-        //works for the majority of cells.
-        var markedNodes = Set<MonoColorVoronoiCell>()
-        var queue = Queue<MonoColorVoronoiCell>()
-        queue.enqueue(first)
-        
-        while let top = queue.dequeue() {
-            if markedNodes.contains(top) {
-                continue
-            }
-            
-            let validIndices = indices.filter() { i in !top.neighbors.contains() { n in n.colorIndex == i } }
-            var index = indices.randomElement()!
-            if let colorIndex = validIndices.randomElement() {
-                index = colorIndex
-            }
-            
-            top.colorIndex = index
-//            top.sprite.shadeColor = SCVector3.rainbowColorAtIndex(index)
-            top.sprite.shadeColor = color * shades[index]
-            markedNodes.insert(top)
-            for neighbor in top.neighbors {
-                queue.enqueue(neighbor)
-            }
-        }
-    }
-    
-    private func getMonoCells() -> [MonoColorVoronoiCell]? {
-        
-        guard let cells = self.diagram?.sweep().cells else {
-            return nil
-        }
-        var monoCells:[MonoColorVoronoiCell] = []
-        for (i, cell) in cells.enumerated() {
-            monoCells.append(MonoColorVoronoiCell(cell: cell, sprite: self.getSpriteFor(cell: cell, in: cells)!, index: i))
-        }
-        for cell in monoCells {
-            let cellNeighbors = cell.cell.neighbors
-            cell.neighbors = monoCells.filter() { m in cellNeighbors.contains() { c in m.cell === c } }
-        }
-        return monoCells
-    }
-    
-    func createDiagramFor(points:[CGPoint]) {
-        let diagram = VoronoiDiagram(points: points, size: self.glView.frame.size)
-        
-        if let oldDiagram = self.diagram {
-            //Add undo, remove all redos
-            self.undoStack.push(oldDiagram.points)
-            while self.redoStack.count > 0 {
-                let _ = self.redoStack.pop()
-            }
-        }
-        
-        self.display(diagram: diagram)
-    }
-
     func viewDidResize() {
-        self.sizeLabel.stringValue = "Size: \(self.glView.frame.size)"
+        self.voronoiView.viewDidResize()
     }
+    
+    // MARK: - Parsing Points
     
     func split(string:String) -> [String] {
         var cur = ""
@@ -372,8 +223,12 @@ class ViewController: NSViewController {
     
     @IBAction func calculateButtonPressed(_ sender: AnyObject) {
         do {
+            self.voronoiView.size = CGSize(width: self.widthTextField.doubleValue, height: self.heightTextField.doubleValue)
             let points = try self.parsePoints()
-            self.createDiagramFor(points: points)
+            self.points = points
+            self.voronoiView.points = points
+            self.voronoiView.calculate()
+            self.voronoiView.display()
         } catch {
             
         }
@@ -411,31 +266,14 @@ class ViewController: NSViewController {
         self.textView.showFindIndicator(for: nsrange)
     }
     
-    @IBAction func backButtonPressed(_ sender: AnyObject) {
-        if let top = self.undoStack.pop() {
-            if let oldDiagram = self.diagram {
-                self.redoStack.push(oldDiagram.points)
-            }
-            let diagram = VoronoiDiagram(points: top, size: self.glView.frame.size)
-            self.display(diagram: diagram)
-        }
-    }
+    // MARK: - Mouse Events
     
-    @IBAction func nextButtonPressed(_ sender: AnyObject) {
-        if let top = self.redoStack.pop() {
-            if let oldDiagram = self.diagram {
-                self.undoStack.push(oldDiagram.points)
-            }
-            let diagram = VoronoiDiagram(points: top, size: self.glView.frame.size)
-            self.display(diagram: diagram)
-        }
-    }
- 
     func getGLLocation(event:NSEvent) -> NSPoint {
-        return event.locationInWindow - self.glView.frame.origin
+        return event.locationInWindow - self.glView.frame.origin - self.voronoiView.voronoiBuffer.position + self.voronoiView.voronoiBuffer.anchor * self.voronoiView.voronoiBuffer.contentSize
     }
     
     override func mouseMoved(with event: NSEvent) {
+        /*
         switch self.colorMode {
         case .Hover:
             break
@@ -446,26 +284,26 @@ class ViewController: NSViewController {
             return
         }
         let location = self.getGLLocation(event: event)
-        let duration:CGFloat = 1.0 / 7.5
+        var lastIndex = self.currentHoverCellIndex
         if let cellIndex = cells.index(where: { $0.contains(point: location) }) {
             if let lastCellIndex = self.currentHoverCellIndex {
-                GLSNode.animateWithDuration(duration) {
-                    self.sprites[lastCellIndex].shadeColor = SCVector3.blackColor
-                    let neighbors = cells[lastCellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
-                    for neighbor in neighbors {
-                        neighbor.shadeColor = SCVector3.blackColor
-                    }
+                self.sprites[lastCellIndex].shadeColor = SCVector3.blackColor
+                let neighbors = cells[lastCellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
+                for neighbor in neighbors {
+                    neighbor.shadeColor = SCVector3.blackColor
                 }
             }
             self.currentHoverCellIndex = cellIndex
-            GLSNode.animateWithDuration(duration) {
-                self.sprites[cellIndex].shadeColor = SCVector3.redColor * 0.75
-                let neighbors = cells[cellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
-                for neighbor in neighbors {
-                    neighbor.shadeColor = SCVector3.redColor * 0.5
-                }
+            self.sprites[cellIndex].shadeColor = SCVector3.redColor * 0.75
+            let neighbors = cells[cellIndex].neighbors.flatMap() { self.getSpriteFor(cell: $0, in: cells) }
+            for neighbor in neighbors {
+                neighbor.shadeColor = SCVector3.redColor * 0.5
+            }
+            if lastIndex != cellIndex {
+                self.display()
             }
         }
+        */
     }
     
     override func mouseDown(with event: NSEvent) {
@@ -495,11 +333,16 @@ class ViewController: NSViewController {
         guard let dragIndex = self.dragIndex else {
             return
         }
+        guard self.points.count <= 64 else {
+            return
+        }
         let location = self.getGLLocation(event: event)
         let delta = location - self.initialMouseLocation
         let newPoint = self.initialDragPoint + delta
         self.points[dragIndex] = newPoint
-        self.createDiagramFor(points: points)
+        self.voronoiView.points = self.points
+        self.voronoiView.calculate()
+        self.voronoiView.display()
     }
     
     override func mouseUp(with event: NSEvent) {
@@ -512,41 +355,83 @@ class ViewController: NSViewController {
         }
         let location = self.getGLLocation(event: event)
         self.points.append(location)
-        self.createDiagramFor(points: self.points)
+        self.voronoiView.points = self.points
+        self.voronoiView.calculate()
+        self.voronoiView.display()
     }
     
-    @IBAction func colorModeChanged(_ sender: NSPopUpButton) {
-        guard let title = sender.selectedItem?.title else {
-            return
-        }
-        if title == "Rainbow" {
-            self.colorMode = .Rainbow
-        } else if title == "Hover" {
-            self.colorMode = .Hover
-        } else if title == "Mono" {
-            let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorSliderController") as! ColorSliderController
-            colorController.dismissHandler = { color in
-                self.colorMode = .Mono(color.getVector3())
-                self.glView.display()
-            }
-            self.presentViewControllerAsSheet(colorController)
-            return
-        }
-        self.glView.display()
+    @IBAction func edgesCheckboxChanged(_ sender: Any) {
+        self.voronoiView.renderEdges = self.edgesCheckbox.integerValue != 0
+        self.voronoiView.display()
     }
     
-    func getSpriteFor(cell:VoronoiCell, in cells:[VoronoiCell]) -> GLSNode? {
-        for (i, sprite) in self.sprites.enumerated() {
-            if cells[i] === cell {
-                return sprite
-            }
+    @IBAction func pointsCheckboxChanged(_ sender: Any) {
+        self.voronoiView.renderPoints = self.pointsCheckbox.integerValue != 0
+        self.voronoiView.display()
+    }
+    
+    @IBAction func colorButtonPressed(_ sender: Any) {
+        let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorSliderController") as! ColorSliderController
+        let _ = colorController.colorList.set(colors: self.voronoiView.colors.map() { NSColor(vector4: $0) })
+        colorController.dismissHandler = {
+            self.voronoiView.colors = $0.map() { c in c.getVector4() }
+            self.voronoiView.calculate()
+            self.voronoiView.display()
         }
-        return nil
+        self.presentViewControllerAsSheet(colorController)
+    }
+    
+    @IBAction func edgeColorButtonPressed(_ sender: Any) {
+        let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorSliderController") as! ColorSliderController
+        colorController.displayColorList = false
+        let _ = colorController.colorList.set(colors: self.voronoiView.colors.map() { NSColor(vector4: $0) })
+        colorController.initialColor = NSColor(vector4: self.voronoiView.edgeColor)
+        colorController.dismissHandler = {
+            self.voronoiView.edgeColor = $0.first!.getVector4()
+            self.voronoiView.display()
+        }
+        self.presentViewControllerAsSheet(colorController)
+    }
+    
+    @IBAction func relaxButtonPressed(_ sender: Any) {
+        guard let diagram = self.voronoiView.diagram else {
+            return
+        }
+        let cells = diagram.sweep().cells
+        let points = cells.map() { cell -> CGPoint in
+            let vertices = cell.makeVertexLoop()
+            return vertices.reduce(CGPoint.zero) { $0 + $1 } / CGFloat(vertices.count)
+        }
+        self.voronoiView.points = points
+        self.voronoiView.calculate()
+        self.voronoiView.display()
+        
+        self.setPointText()
     }
  
-    func updateTimer(sender:Timer) {
-        self.glView.container.update(1.0 / 30.0)
-        self.glView.display()
+    
+    func exportButtonPressed(notification:Notification) {
+        let panel = NSSavePanel()
+        panel.canSelectHiddenExtension = true
+        panel.allowedFileTypes = ["png"]
+        switch panel.runModal() {
+        case NSModalResponseOK:
+            guard let url = panel.url else {
+                return
+            }
+            let image = self.voronoiView.voronoiBuffer.getImage()
+            let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil)!
+            let bitmap = NSBitmapImageRep(cgImage: cgImage)
+            bitmap.size = image.size
+            let data = bitmap.representation(using: NSBitmapImageFileType.PNG, properties: [:])
+            do {
+                try data?.write(to: url, options: .atomic)
+            } catch {
+                print(error)
+            }
+        default:
+            break
+        }
     }
     
 }

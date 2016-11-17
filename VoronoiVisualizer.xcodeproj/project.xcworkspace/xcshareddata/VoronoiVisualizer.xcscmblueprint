@@ -4,19 +4,21 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "404240255233E19FDAA39885DFC14C20D8257872" : 9223372036854775807,
     "4A90A722C0D5BCE93BAF9E2494386311BDFB5DB8" : 9223372036854775807,
     "34F7D422FB3054CFBD6E34FD29953606CFFC95C8" : 9223372036854775807,
     "3348876C35B1927724B0EDCAF307B7E8CC2D6410" : 9223372036854775807,
-    "404240255233E19FDAA39885DFC14C20D8257872" : 9223372036854775807,
+    "BE689A2791923ECEED4FF6DEE28BDB0F4DF9E3C8" : 9223372036854775807,
     "8F9D2AD734303863F151C37D7BB0E5A7EA91ED7A" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "D3389439-0667-4D0B-9B82-3A03063716F4",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "4A90A722C0D5BCE93BAF9E2494386311BDFB5DB8" : "Refactored%20Dependencies\/CoronaStructures\/",
-    "34F7D422FB3054CFBD6E34FD29953606CFFC95C8" : "Refactored%20Dependencies\/CoronaConvenience\/",
-    "3348876C35B1927724B0EDCAF307B7E8CC2D6410" : "VoronoiVisualizer\/",
     "404240255233E19FDAA39885DFC14C20D8257872" : "Voronoi\/",
-    "8F9D2AD734303863F151C37D7BB0E5A7EA91ED7A" : "Refactored%20Dependencies\/CoronaGL\/"
+    "4A90A722C0D5BCE93BAF9E2494386311BDFB5DB8" : "CoronaStructures\/",
+    "34F7D422FB3054CFBD6E34FD29953606CFFC95C8" : "CoronaConvenience\/",
+    "3348876C35B1927724B0EDCAF307B7E8CC2D6410" : "VoronoiVisualizer\/",
+    "BE689A2791923ECEED4FF6DEE28BDB0F4DF9E3C8" : "NoiseGenerator\/",
+    "8F9D2AD734303863F151C37D7BB0E5A7EA91ED7A" : "CoronaGL\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "VoronoiVisualizer",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -46,6 +48,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CooperCorona\/CoronaGL.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8F9D2AD734303863F151C37D7BB0E5A7EA91ED7A"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/CooperCorona\/Noisy-Images.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "BE689A2791923ECEED4FF6DEE28BDB0F4DF9E3C8"
     }
   ]
 }

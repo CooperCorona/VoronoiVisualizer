@@ -6,7 +6,6 @@ Generate random voronoi diagrams or input your own points to create a custom vor
 ### New Features
 * Click anywhere in the diagram to add a new point.
 * Drag a point to watch the diagram update in real time (only functions for diagrams with <= 64 points because diagrams with higher number of points take too long to render).
-* Change coloring scheme to "Hover" mode and move your mouse to see which cells are neighbors to each other.
-* "Mono" coloring mode colors all cells subtly different shades of the same color.
+* Mono Mode Update: You can now choose any number and type of colors to color your Voronoi Diagram (Mono is now the only coloring scheme; others have been deprecated).
 
 ![](VoronoiDiagramImage.png)

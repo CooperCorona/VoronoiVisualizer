@@ -98,6 +98,16 @@ class ColorList: NSObject {
         return view
     }
     
+    func set(colors:[NSColor]) -> Bool {
+        guard colors.count >= 2 else {
+            return false
+        }
+        self.views = colors.map() { ColorListItem(frame: NSRect(square: self.viewSize), color: $0, owner: self) }
+        self.selectedViewIndex = 0
+        self.views.first?.isSelected = true
+        return true
+    }
+    
     func setCurrent(color:NSColor) -> Bool {
         if let index = self.selectedViewIndex {
             self.views[index].color = color

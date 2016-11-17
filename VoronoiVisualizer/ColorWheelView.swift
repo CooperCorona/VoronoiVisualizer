@@ -58,11 +58,12 @@ open class ColorWheelView: OmniGLView2d {
         glViewport(0, 0, GLsizei(self.frame.width), GLsizei(self.frame.height))
         GLSNode.universalProjection = SCMatrix4(right: self.frame.width, top: self.frame.height)
         
-        let _ = self.container.removeChild(self.wheelBuffer.sprite)
+        let _ = self.container.removeChild(self.wheelBuffer)
         self.wheelBuffer = GLSFrameBuffer(size: self.frame.size)
-        self.wheelBuffer.sprite.position = self.wheelBuffer.contentSize.center
+        self.wheelBuffer.position = self.wheelBuffer.contentSize.center
         self.wheelBuffer.clearColor = SCVector4()
-        self.container.addChild(self.wheelBuffer.sprite)
+        self.wheelBuffer.renderChildren = false
+        self.container.addChild(self.wheelBuffer)
         TexturedQuad.setPosition(CGRect(size: self.frame.size), ofVertices: &self.vertices.vertices)
     }
     
@@ -174,13 +175,13 @@ open class ColorWheelViewWrapper: NSView {
     }
     
     private func moveKnobFor(hue:CGFloat, saturation:CGFloat) {
-        if saturation ~= 0.0 {
-            self.knobImage.frame.center = self.frame.size.center
-        } else {
+//        if saturation ~= 0.0 {
+//            self.knobImage.frame.center = self.frame.size.center
+//        } else {
             let angle = CGFloat(2.0 * M_PI) * hue
-            let radius = (1.0 - saturation) * self.frame.width / 2.0
+            let radius = saturation * self.frame.width / 2.0
             self.knobImage.frame.center = self.frame.size.center + CGPoint(angle: angle, length: radius)
-        }
+//        }
     }
     
     open override func mouseDown(with event: NSEvent) {
@@ -197,8 +198,8 @@ open class ColorWheelViewWrapper: NSView {
     
     private func calculateColorAt(point:NSPoint) -> [CGFloat]? {
         let center = self.frame.size.center
-        let saturation = 1.0 - point.distanceFrom(center) / (self.frame.size.width / 2.0)
-        guard saturation >= 0.0 else {
+        let saturation = point.distanceFrom(center) / (self.frame.size.width / 2.0)
+        guard saturation >= 0.0 && saturation <= 1.0 else {
             return nil
         }
         let hue = AngleDelta.makePositive(angle: center.angleTo(point)) / CGFloat(2.0 * M_PI)
@@ -207,7 +208,7 @@ open class ColorWheelViewWrapper: NSView {
     
     private func convertToRGB(hue:CGFloat, saturation:CGFloat, brightness:CGFloat) -> SCVector3 {
         var rgb = ColorGradient1D.hueGradient[hue].xyz
-        rgb = linearlyInterpolate(saturation, left: rgb, right: SCVector3.whiteColor)
+        rgb = linearlyInterpolate(saturation, left: SCVector3.whiteColor, right: rgb)
         rgb *= brightness
         return rgb
     }

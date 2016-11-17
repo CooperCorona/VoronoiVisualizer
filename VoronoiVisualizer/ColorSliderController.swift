@@ -27,6 +27,9 @@ class ColorSliderController: NSViewController, NSTextFieldDelegate, ColorWheelVi
         NSColor(red: 0.35, green: 0.35, blue: 0.35, alpha: 1.0)
     ])
     
+    var displayColorList = true
+    var initialColor = NSColor.white
+    
     var lastRedValue    = "255"
     var lastGreenValue  = "255"
     var lastBlueValue   = "255"
@@ -42,15 +45,28 @@ class ColorSliderController: NSViewController, NSTextFieldDelegate, ColorWheelVi
         self.alphaTextField.delegate    = self
         self.colorWheelWrapper.delegate = self
         
-        self.colorWheelWrapper.set(red: 0.5, green: 0.5, blue: 0.5)
-        self.colorList.delegate = self
-        self.colorList.plusButton = self.plusButton
-        self.colorList.minusButton = self.minusButton
-        self.colorList.originTopLeft = NSPoint(x: 0.0, y: self.view.frame.height)
-        for view in self.colorList.views {
-            self.view.addSubview(view)
+        if self.displayColorList {
+            if let comps = self.colorList.selectedColor?.getComponents() {
+                self.colorWheelWrapper.set(red: comps[0], green: comps[1], blue: comps[2], alpha: comps[3])
+            } else {
+                self.colorWheelWrapper.set(red: 0.5, green: 0.5, blue: 0.5)
+            }
+            self.colorList.delegate = self
+            self.colorList.plusButton = self.plusButton
+            self.colorList.minusButton = self.minusButton
+            self.colorList.originTopLeft = NSPoint(x: 0.0, y: self.view.frame.height)
+            for view in self.colorList.views {
+                self.view.addSubview(view)
+            }
+            self.colorList.layout(viewWidth: self.view.frame.width)
+        } else {
+            self.plusButton.isHidden  = true
+            self.minusButton.isHidden = true
+            let comps = self.initialColor.getComponents()
+            self.colorWheelWrapper.set(red: comps[0], green: comps[1], blue: comps[2], alpha: comps[3])
+            self.brightnessSlider.doubleValue = Double(self.colorWheelWrapper.brightness)
+            self.colorChanged(red: comps[0], green: comps[1], blue: comps[2], alpha: comps[3])
         }
-        self.colorList.layout(viewWidth: self.view.frame.width)
     }
     
     override func viewDidAppear() {
@@ -107,7 +123,7 @@ class ColorSliderController: NSViewController, NSTextFieldDelegate, ColorWheelVi
     
     @IBAction func brightnessSliderChanged(_ sender: Any) {
         self.colorWheelWrapper.brightness = CGFloat(self.brightnessSlider.doubleValue)
-        self.colorWheelWrapper.colorWheel.display()
+        self.colorWheelWrapper.display()
     }
     
     func colorChanged(hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat) {
@@ -118,7 +134,7 @@ class ColorSliderController: NSViewController, NSTextFieldDelegate, ColorWheelVi
         self.redTextField.stringValue   = "\(Int(255.0 * red))"
         self.greenTextField.stringValue = "\(Int(255.0 * green))"
         self.blueTextField.stringValue  = "\(Int(255.0 * blue))"
-        self.colorList.setCurrent(color: NSColor(red: red, green: green, blue: blue, alpha: alpha))
+        let _ = self.colorList.setCurrent(color: NSColor(red: red, green: green, blue: blue, alpha: alpha))
     }
     
     func selected(color:NSColor) {
@@ -155,7 +171,22 @@ class ColorSliderController: NSViewController, NSTextFieldDelegate, ColorWheelVi
     }
     
     @IBAction func doneButtonPressed(_ sender: Any) {
-        self.dismissHandler?(self.colorList.views.map() { $0.color })
+        //When the framebuffer stack pushes a framebuffer (thus binding
+        //its internal context), sometimes, the old context's data is
+        //persisted, screwing up the viewport. Setting the values to nil
+        //prevents the data from being cached, fixing the viewport.
+        self.colorWheelWrapper.colorWheel.openGLContext?.view = nil
+        self.colorWheelWrapper.colorWheel.openGLContext = nil
+        
+        if self.displayColorList {
+            self.dismissHandler?(self.colorList.views.map() { $0.color })
+        } else {
+            let red     = CGFloat(self.redTextField.integerValue) / 255.0
+            let green   = CGFloat(self.greenTextField.integerValue) / 255.0
+            let blue    = CGFloat(self.blueTextField.integerValue) / 255.0
+            let alpha   = CGFloat(self.alphaTextField.integerValue) / 255.0
+            self.dismissHandler?([NSColor(red: red, green: green, blue: blue, alpha: alpha)])
+        }
         self.dismiss(nil)
     }
     

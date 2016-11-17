@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC075EED1DD1833E006EDF2D /* CoronaConvenience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCAC32031DD17E55006F85DA /* CoronaConvenience.framework */; };
+		DC075EEE1DD1833E006EDF2D /* CoronaGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCAC32121DD17E66006F85DA /* CoronaGL.framework */; };
+		DC075EEF1DD1833E006EDF2D /* CoronaStructures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCAC320A1DD17E5F006F85DA /* CoronaStructures.framework */; };
 		DC130ECD1D8DBE65007304AF /* WhiteCircle.pdf in Resources */ = {isa = PBXBuildFile; fileRef = DC130ECC1D8DBE65007304AF /* WhiteCircle.pdf */; };
 		DC130ED21D8DC6CD007304AF /* ColorShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC130ED11D8DC6CD007304AF /* ColorShader.vsh */; };
 		DC130ED41D8DC6D8007304AF /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC130ED31D8DC6D8007304AF /* ColorShader.fsh */; };
@@ -20,13 +23,13 @@
 		DC6E8B211DCBCC7300620B7C /* CheckerShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B1F1DCBCC7300620B7C /* CheckerShader.vsh */; };
 		DC8B22971D8F908C00C0BA11 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA998D1D8CC9F90019964F /* ViewController.swift */; };
 		DCC593D51DC8DDB40033986E /* ColorWheelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC593D41DC8DDB40033986E /* ColorWheelView.swift */; };
+		DCD0ED651DCFD92400064BD1 /* OutlinedCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = DCD0ED641DCFD92400064BD1 /* OutlinedCircle.png */; };
+		DCD0ED6A1DCFF94500064BD1 /* VoronoiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD0ED691DCFF94500064BD1 /* VoronoiView.swift */; };
 		DCE0D1F01DCAA9610047F993 /* ColorList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE0D1EF1DCAA9610047F993 /* ColorList.swift */; };
 		DCE0D1F51DCAA9670047F993 /* ColorListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE0D1F41DCAA9670047F993 /* ColorListItem.swift */; };
 		DCEA998C1D8CC9F90019964F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA998B1D8CC9F90019964F /* AppDelegate.swift */; };
 		DCEA99901D8CC9F90019964F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DCEA998F1D8CC9F90019964F /* Assets.xcassets */; };
 		DCEA99931D8CC9F90019964F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DCEA99911D8CC9F90019964F /* Main.storyboard */; };
-		DCEA99B21D8CCA4D0019964F /* CoronaConvenience.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEA999F1D8CCA380019964F /* CoronaConvenience.framework */; };
-		DCEA99B31D8CCA4D0019964F /* CoronaGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEA99A81D8CCA3E0019964F /* CoronaGL.framework */; };
 		DCEA99B41D8CCA4D0019964F /* Voronoi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCEA99B11D8CCA460019964F /* Voronoi.framework */; };
 		DCEA99E21D8CFC380019964F /* BasicShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DCEA99E01D8CFC380019964F /* BasicShader.fsh */; };
 		DCEA99E31D8CFC380019964F /* BasicShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DCEA99E11D8CFC380019964F /* BasicShader.vsh */; };
@@ -35,16 +38,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		DCEA999E1D8CCA380019964F /* PBXContainerItemProxy */ = {
+		DCAC32021DD17E55006F85DA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DCEA999A1D8CCA380019964F /* CoronaConvenience.xcodeproj */;
+			containerPortal = DCAC31FE1DD17E55006F85DA /* CoronaConvenience.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DC4D07951D7D233A00862432;
 			remoteInfo = CoronaConvenience;
 		};
-		DCEA99A71D8CCA3E0019964F /* PBXContainerItemProxy */ = {
+		DCAC32091DD17E5F006F85DA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = DCEA99A01D8CCA3E0019964F /* CoronaGL.xcodeproj */;
+			containerPortal = DCAC32041DD17E5F006F85DA /* CoronaStructures.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DC7428CE1D7F4446001AF8E1;
+			remoteInfo = CoronaStructures;
+		};
+		DCAC32111DD17E66006F85DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DCAC320B1DD17E66006F85DA /* CoronaGL.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = DC5CDC891D80B30F008C2A8D;
 			remoteInfo = CoronaGL;
@@ -70,7 +80,12 @@
 		DC6E8B041DCBC36400620B7C /* CheckeredBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CheckeredBackground.png; path = "../../../Xcode PNGs/Noise Generator/CheckeredBackground.png"; sourceTree = "<group>"; };
 		DC6E8B1E1DCBCC7300620B7C /* CheckerShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CheckerShader.fsh; sourceTree = "<group>"; };
 		DC6E8B1F1DCBCC7300620B7C /* CheckerShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CheckerShader.vsh; sourceTree = "<group>"; };
+		DCAC31FE1DD17E55006F85DA /* CoronaConvenience.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaConvenience.xcodeproj; path = ../CoronaConvenience/CoronaConvenience.xcodeproj; sourceTree = "<group>"; };
+		DCAC32041DD17E5F006F85DA /* CoronaStructures.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaStructures.xcodeproj; path = ../CoronaStructures/CoronaStructures.xcodeproj; sourceTree = "<group>"; };
+		DCAC320B1DD17E66006F85DA /* CoronaGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaGL.xcodeproj; path = ../CoronaGL/CoronaGL.xcodeproj; sourceTree = "<group>"; };
 		DCC593D41DC8DDB40033986E /* ColorWheelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorWheelView.swift; sourceTree = "<group>"; };
+		DCD0ED641DCFD92400064BD1 /* OutlinedCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OutlinedCircle.png; sourceTree = "<group>"; };
+		DCD0ED691DCFF94500064BD1 /* VoronoiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoronoiView.swift; sourceTree = "<group>"; };
 		DCE0D1EF1DCAA9610047F993 /* ColorList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorList.swift; sourceTree = "<group>"; };
 		DCE0D1F41DCAA9670047F993 /* ColorListItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorListItem.swift; sourceTree = "<group>"; };
 		DCEA99881D8CC9F90019964F /* VoronoiVisualizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoronoiVisualizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,8 +94,6 @@
 		DCEA998F1D8CC9F90019964F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DCEA99921D8CC9F90019964F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DCEA99941D8CC9F90019964F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DCEA999A1D8CCA380019964F /* CoronaConvenience.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaConvenience.xcodeproj; path = "../Refactored Dependencies/CoronaConvenience/CoronaConvenience.xcodeproj"; sourceTree = "<group>"; };
-		DCEA99A01D8CCA3E0019964F /* CoronaGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaGL.xcodeproj; path = "../Refactored Dependencies/CoronaGL/CoronaGL.xcodeproj"; sourceTree = "<group>"; };
 		DCEA99A91D8CCA460019964F /* Voronoi.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Voronoi.xcodeproj; path = ../Voronoi/Voronoi.xcodeproj; sourceTree = "<group>"; };
 		DCEA99B61D8CCA4D0019964F /* CoronaStructures.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoronaStructures.framework; path = "../Refactored Dependencies/CoronaStructures/build/Debug-iphoneos/CoronaStructures.framework"; sourceTree = "<group>"; };
 		DCEA99E01D8CFC380019964F /* BasicShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = BasicShader.fsh; sourceTree = "<group>"; };
@@ -94,8 +107,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCEA99B21D8CCA4D0019964F /* CoronaConvenience.framework in Frameworks */,
-				DCEA99B31D8CCA4D0019964F /* CoronaGL.framework in Frameworks */,
+				DC075EED1DD1833E006EDF2D /* CoronaConvenience.framework in Frameworks */,
+				DC075EEE1DD1833E006EDF2D /* CoronaGL.framework in Frameworks */,
+				DC075EEF1DD1833E006EDF2D /* CoronaStructures.framework in Frameworks */,
 				DCEA99B41D8CCA4D0019964F /* Voronoi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,11 +132,36 @@
 			name = Shaders;
 			sourceTree = "<group>";
 		};
+		DCAC31FF1DD17E55006F85DA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DCAC32031DD17E55006F85DA /* CoronaConvenience.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DCAC32051DD17E5F006F85DA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DCAC320A1DD17E5F006F85DA /* CoronaStructures.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DCAC320C1DD17E66006F85DA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DCAC32121DD17E66006F85DA /* CoronaGL.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DCEA997F1D8CC9F90019964F = {
 			isa = PBXGroup;
 			children = (
-				DCEA999A1D8CCA380019964F /* CoronaConvenience.xcodeproj */,
-				DCEA99A01D8CCA3E0019964F /* CoronaGL.xcodeproj */,
+				DCAC31FE1DD17E55006F85DA /* CoronaConvenience.xcodeproj */,
+				DCAC32041DD17E5F006F85DA /* CoronaStructures.xcodeproj */,
+				DCAC320B1DD17E66006F85DA /* CoronaGL.xcodeproj */,
 				DCEA99A91D8CCA460019964F /* Voronoi.xcodeproj */,
 				DCEA998A1D8CC9F90019964F /* VoronoiVisualizer */,
 				DCEA99891D8CC9F90019964F /* Products */,
@@ -143,6 +182,7 @@
 			children = (
 				DCEA99E41D8CFD040019964F /* Atlases.xml */,
 				DC6E8B041DCBC36400620B7C /* CheckeredBackground.png */,
+				DCD0ED641DCFD92400064BD1 /* OutlinedCircle.png */,
 				DCEA99E61D8CFD0A0019964F /* WhiteTile.png */,
 				DC130ECC1D8DBE65007304AF /* WhiteCircle.pdf */,
 				DC6E8B091DCBC36E00620B7C /* Shaders */,
@@ -153,28 +193,13 @@
 				DCC593D41DC8DDB40033986E /* ColorWheelView.swift */,
 				DC130ED71D8DC753007304AF /* GLSVoronoiEdgeSprite.swift */,
 				DCEA998D1D8CC9F90019964F /* ViewController.swift */,
+				DCD0ED691DCFF94500064BD1 /* VoronoiView.swift */,
 				DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */,
 				DCEA998F1D8CC9F90019964F /* Assets.xcassets */,
 				DCEA99911D8CC9F90019964F /* Main.storyboard */,
 				DCEA99941D8CC9F90019964F /* Info.plist */,
 			);
 			path = VoronoiVisualizer;
-			sourceTree = "<group>";
-		};
-		DCEA999B1D8CCA380019964F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DCEA999F1D8CCA380019964F /* CoronaConvenience.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		DCEA99A11D8CCA3E0019964F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DCEA99A81D8CCA3E0019964F /* CoronaGL.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		DCEA99AA1D8CCA460019964F /* Products */ = {
@@ -242,12 +267,16 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = DCEA999B1D8CCA380019964F /* Products */;
-					ProjectRef = DCEA999A1D8CCA380019964F /* CoronaConvenience.xcodeproj */;
+					ProductGroup = DCAC31FF1DD17E55006F85DA /* Products */;
+					ProjectRef = DCAC31FE1DD17E55006F85DA /* CoronaConvenience.xcodeproj */;
 				},
 				{
-					ProductGroup = DCEA99A11D8CCA3E0019964F /* Products */;
-					ProjectRef = DCEA99A01D8CCA3E0019964F /* CoronaGL.xcodeproj */;
+					ProductGroup = DCAC320C1DD17E66006F85DA /* Products */;
+					ProjectRef = DCAC320B1DD17E66006F85DA /* CoronaGL.xcodeproj */;
+				},
+				{
+					ProductGroup = DCAC32051DD17E5F006F85DA /* Products */;
+					ProjectRef = DCAC32041DD17E5F006F85DA /* CoronaStructures.xcodeproj */;
 				},
 				{
 					ProductGroup = DCEA99AA1D8CCA460019964F /* Products */;
@@ -262,18 +291,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		DCEA999F1D8CCA380019964F /* CoronaConvenience.framework */ = {
+		DCAC32031DD17E55006F85DA /* CoronaConvenience.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = CoronaConvenience.framework;
-			remoteRef = DCEA999E1D8CCA380019964F /* PBXContainerItemProxy */;
+			remoteRef = DCAC32021DD17E55006F85DA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		DCEA99A81D8CCA3E0019964F /* CoronaGL.framework */ = {
+		DCAC320A1DD17E5F006F85DA /* CoronaStructures.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CoronaStructures.framework;
+			remoteRef = DCAC32091DD17E5F006F85DA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DCAC32121DD17E66006F85DA /* CoronaGL.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = CoronaGL.framework;
-			remoteRef = DCEA99A71D8CCA3E0019964F /* PBXContainerItemProxy */;
+			remoteRef = DCAC32111DD17E66006F85DA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		DCEA99B11D8CCA460019964F /* Voronoi.framework */ = {
@@ -300,6 +336,7 @@
 				DC130ED21D8DC6CD007304AF /* ColorShader.vsh in Resources */,
 				DC6E8B211DCBCC7300620B7C /* CheckerShader.vsh in Resources */,
 				DCEA99E51D8CFD040019964F /* Atlases.xml in Resources */,
+				DCD0ED651DCFD92400064BD1 /* OutlinedCircle.png in Resources */,
 				DC6E8B051DCBC36400620B7C /* CheckeredBackground.png in Resources */,
 				DCEA99E21D8CFC380019964F /* BasicShader.fsh in Resources */,
 				DCEA99E31D8CFC380019964F /* BasicShader.vsh in Resources */,
@@ -320,6 +357,7 @@
 				DC130ED81D8DC753007304AF /* GLSVoronoiEdgeSprite.swift in Sources */,
 				DC130EDA1D8DE2A9007304AF /* WindowResizeController.swift in Sources */,
 				DC8B22971D8F908C00C0BA11 /* ViewController.swift in Sources */,
+				DCD0ED6A1DCFF94500064BD1 /* VoronoiView.swift in Sources */,
 				DC1ADA4E1DBD2E2900201A32 /* ColorSliderController.swift in Sources */,
 				DCEA998C1D8CC9F90019964F /* AppDelegate.swift in Sources */,
 			);

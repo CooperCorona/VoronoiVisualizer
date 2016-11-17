@@ -21,6 +21,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
 
+    static let ExportImageNotification = "com.coopercorona.VoronoiVisualizer.ExportImageNotification"
+    
+    @IBAction func exportMenuItemClicked(_ sender: Any) {
+        NotificationCenter.default.post(name: Notification.Name(rawValue: AppDelegate.ExportImageNotification), object: self)
+    }
 
 }
 

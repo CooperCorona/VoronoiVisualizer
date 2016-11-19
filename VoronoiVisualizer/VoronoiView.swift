@@ -41,6 +41,8 @@ class VoronoiView: NSObject {
     weak var glView:OmniGLView2d? = nil
     var viewSize:CGSize { return self.glView?.frame.size ?? CGSize(square: 1.0) }
     var voronoiBuffer = GLSFrameBuffer(size: CGSize(square: 1.0))
+    var tileBuffer = GLSFrameBuffer(size: CGSize(square: 1.0))
+    var tileSprites:[GLSSprite] = []
     var pointContainer = GLSNode(position: CGPoint.zero, size: CGSize.zero)
     var edgeContainer = GLSNode(position: CGPoint.zero, size: CGSize.zero)
     let checkerBackground:GLSCheckerSprite
@@ -74,6 +76,14 @@ class VoronoiView: NSObject {
     }
     private var seed:UInt64 = 0
     private var random = GKMersenneTwisterRandomSource(seed: 0)
+    
+    var isTiled:Bool = false {
+        didSet {
+            if let diagram = self.diagram {
+                self.calculate(diagram: diagram)
+            }
+        }
+    }
     
     init(glView:OmniGLView2d?) {
         self.glView = glView
@@ -115,7 +125,12 @@ class VoronoiView: NSObject {
         let _ = self.glView?.removeChild(self.voronoiBuffer)
         self.voronoiBuffer = GLSFrameBuffer(size: self.size)
         self.voronoiBuffer.position = self.viewSize.center
+        self.tileBuffer = GLSFrameBuffer(size: self.size)
         self.glView?.addChild(self.voronoiBuffer)
+        while let bufferCount = self.glView?.buffers.count, bufferCount > 0 {
+            let _ = self.glView?.removeBuffer(at: 0)
+        }
+        self.glView?.add(buffer: self.tileBuffer)
         self.pointContainer.children.removeAll()
         self.edgeContainer.children.removeAll()
         //Moves it to front.
@@ -128,7 +143,7 @@ class VoronoiView: NSObject {
         self.cells = []
         for (i, cell) in cells.enumerated() {
             let s = GLSVoronoiSprite(cell: cell, boundaries: self.size)
-            self.voronoiBuffer.addChild(s)
+            self.tileBuffer.addChild(s)
             
             let size = max(min(12.0, 36.0 / CGFloat(diagram.points.count) * 12.0), 6.0)
             let vs = GLSSprite(position: cell.voronoiPoint, size: CGSize(square: size), texture: "Outlined Circle")
@@ -139,7 +154,24 @@ class VoronoiView: NSObject {
             
             self.cells.append(VoronoiCellSprite(cell: cell, sprite: s, hash: i))
         }
-        self.voronoiBuffer.addChild(self.edgeContainer)
+        self.tileBuffer.addChild(self.edgeContainer)
+        
+        if self.isTiled {
+            let scales:[CGFloat] = [1.0, -1.0]
+            for yScale in scales {
+                for xScale in scales {
+                    let tSprite = GLSSprite(size: self.size / 2.0, texture: self.tileBuffer.ccTexture)
+                    tSprite.scaleX = xScale
+                    tSprite.scaleY = yScale
+                    tSprite.position = self.size.center - self.size.center * CGPoint(x: xScale, y: yScale) / 2.0
+                    self.voronoiBuffer.addChild(tSprite)
+                }
+            }
+        } else {
+            let tSprite = GLSSprite(size: self.size, texture: self.tileBuffer.ccTexture)
+            tSprite.anchor = CGPoint.zero
+            self.voronoiBuffer.addChild(tSprite)
+        }
         
         for cell in self.cells {
             cell.makeNeighbors(cells: self.cells)

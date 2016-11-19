@@ -434,5 +434,8 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
         }
     }
     
+    @IBAction func tiledCheckboxChanged(_ sender: NSButton) {
+        self.voronoiView.isTiled = sender.integerValue == 0 ? false : true
+    }
 }
 

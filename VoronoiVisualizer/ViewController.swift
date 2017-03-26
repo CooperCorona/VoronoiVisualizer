@@ -43,6 +43,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     @IBOutlet weak var heightTextField: NSTextField!
     @IBOutlet weak var edgesCheckbox: NSButton!
     @IBOutlet weak var pointsCheckbox: NSButton!
+    @IBOutlet weak var trianglesCheckbox: NSButton!
     var previousText:[TextFieldTag:String] = [:]
     var bufferSize:CGSize {
         get { return CGSize(width: self.widthTextField.doubleValue, height: self.heightTextField.doubleValue) }
@@ -149,8 +150,8 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
         if textField.stringValue.matchesRegex("^\\d+$") {
             if textField.integerValue < 1 {
                 textField.stringValue = "1"
-            } else if textField.integerValue > 1024 {
-                textField.stringValue = "1024"
+            } else if textField.integerValue > 2048 {
+                textField.stringValue = "2048"
             }
             self.previousText[fieldType] = textField.stringValue
         } else {
@@ -160,7 +161,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     }
     
     func display() {
-        self.glView.display()
+        self.voronoiView.display()
     }
     
     func viewDidResize() {
@@ -210,7 +211,6 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
                 self.displayAlert(text: "This point is outside the bounds (0.0, 0.0) - \(self.glView.frame.size).")
                 throw ParsePointError.Failed
             }
-            
             usedPoints.insert(point)
         }
         guard usedPoints.count > 1 else {
@@ -400,7 +400,19 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
         let cells = diagram.sweep().cells
         let points = cells.map() { cell -> CGPoint in
             let vertices = cell.makeVertexLoop()
-            return vertices.reduce(CGPoint.zero) { $0 + $1 } / CGFloat(vertices.count)
+            //This weighting causes vertices further from the
+            //voronoi point to be weighted more. This has the
+            //effect of making vertices on the edge of the
+            //diagram to be slightly more similar to the
+            //rest of the cells.
+            let distances = vertices.map() { ($0, $0.distanceFrom(cell.voronoiPoint)) }
+            let totalDistance = distances.reduce(0.0) { $0 + $1.1 }
+            let weightedDistances = distances.map() { ($0.0, $0.1 / totalDistance) }
+            return weightedDistances.reduce(CGPoint.zero) { $0 + $1.0 * $1.1 }
+            
+            //This is the normal weighting. I'm not sure if I like
+            //the other weighting better or not, so I'm leaving it here.
+//            return vertices.reduce(CGPoint.zero) { $0 + $1 } / CGFloat(vertices.count)
         }
         self.voronoiView.points = points
         self.voronoiView.calculate()
@@ -419,6 +431,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
             guard let url = panel.url else {
                 return
             }
+            
             let image = self.voronoiView.voronoiBuffer.getImage()
             let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil)!
             let bitmap = NSBitmapImageRep(cgImage: cgImage)
@@ -434,8 +447,15 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
         }
     }
     
+    @IBAction func trianglesCheckboxChanged(_ sender: NSButton) {
+        self.voronoiView.asTriangles = sender.boolValue
+        self.voronoiView.calculate()
+        self.display()
+    }
+    
     @IBAction func tiledCheckboxChanged(_ sender: NSButton) {
         self.voronoiView.isTiled = sender.integerValue == 0 ? false : true
+        self.display()
     }
 }
 

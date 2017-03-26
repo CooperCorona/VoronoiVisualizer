@@ -74,6 +74,7 @@ class VoronoiView: NSObject {
             self.pointContainer.hidden = !self.renderPoints
         }
     }
+    var asTriangles = false
     private var seed:UInt64 = 0
     private var random = GKMersenneTwisterRandomSource(seed: 0)
     
@@ -98,6 +99,7 @@ class VoronoiView: NSObject {
     }
     
     func display() {
+        self.renderToTexture()
         self.glView?.display()
     }
     
@@ -125,25 +127,42 @@ class VoronoiView: NSObject {
         let _ = self.glView?.removeChild(self.voronoiBuffer)
         self.voronoiBuffer = GLSFrameBuffer(size: self.size)
         self.voronoiBuffer.position = self.viewSize.center
+        self.voronoiBuffer.renderChildren = false
         self.tileBuffer = GLSFrameBuffer(size: self.size)
         self.glView?.addChild(self.voronoiBuffer)
         while let bufferCount = self.glView?.buffers.count, bufferCount > 0 {
             let _ = self.glView?.removeBuffer(at: 0)
         }
-        self.glView?.add(buffer: self.tileBuffer)
         self.pointContainer.children.removeAll()
         self.edgeContainer.children.removeAll()
         //Moves it to front.
         let _ = self.glView?.removeChild(self.pointContainer)
         self.glView?.addChild(self.pointContainer)
         
+        
         self.diagram = diagram
         let cells = diagram.sweep().cells
         
         self.cells = []
         for (i, cell) in cells.enumerated() {
-            let s = GLSVoronoiSprite(cell: cell, boundaries: self.size)
-            self.tileBuffer.addChild(s)
+            if self.asTriangles {
+                let verts = cell.makeVertexLoop()
+                let center = verts.reduce(CGPoint.zero) { $0 + $1 } / CGFloat(verts.count)
+                let triangles = (0..<verts.count).map() { [center, verts[$0], verts[($0 + 1) % verts.count]] }
+                for (j, triangle) in triangles.enumerated() {
+                    let polygon = GLSPolygonSprite(polygonVertices: triangle, boundaries: CGRect(size: self.size))
+                    polygon.texture = "White Tile"
+                    if let c = self.colors.randomElement() {
+                        polygon.shadeColor = c.xyz
+                        polygon.alpha = c.a
+                    }
+                    self.tileBuffer.addChild(polygon)
+                }
+            } else {
+                let s = GLSVoronoiSprite(cell: cell, boundaries: self.size)
+                self.tileBuffer.addChild(s)
+                self.cells.append(VoronoiCellSprite(cell: cell, sprite: s, hash: i))
+            }
             
             let size = max(min(12.0, 36.0 / CGFloat(diagram.points.count) * 12.0), 6.0)
             let vs = GLSSprite(position: cell.voronoiPoint, size: CGSize(square: size), texture: "Outlined Circle")
@@ -151,8 +170,6 @@ class VoronoiView: NSObject {
             
             let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector3.blackColor, thickness: 1.0)
             self.edgeContainer.addChild(es)
-            
-            self.cells.append(VoronoiCellSprite(cell: cell, sprite: s, hash: i))
         }
         self.tileBuffer.addChild(self.edgeContainer)
         
@@ -173,8 +190,12 @@ class VoronoiView: NSObject {
             self.voronoiBuffer.addChild(tSprite)
         }
         
+        var dict:[UnsafeMutableRawPointer:VoronoiCellSprite] = [:]
         for cell in self.cells {
-            cell.makeNeighbors(cells: self.cells)
+            dict[Unmanaged.passUnretained(cell.cell).toOpaque()] = cell
+        }
+        for cell in self.cells {
+            cell.neighbors = cell.cell.neighbors.flatMap() { dict[Unmanaged.passUnretained($0).toOpaque()] }
         }
         
         self.colorCells()
@@ -232,6 +253,18 @@ class VoronoiView: NSObject {
     
     func regenerateSeed() {
         self.seed = UInt64(arc4random())
+    }
+    
+    func renderToTexture() {
+        GLSFrameBuffer.globalContext.makeCurrentContext()
+        OmniGLView2d.setViewport(to: self.tileBuffer.contentSize)
+        self.tileBuffer.renderToTexture()
+        OmniGLView2d.setViewport(to: self.voronoiBuffer.contentSize)
+        self.voronoiBuffer.renderToTexture()
+        if let glView = self.glView {
+            glView.openGLContext?.makeCurrentContext()
+            OmniGLView2d.setViewport(to: glView.bounds.size)
+        }
     }
     
 }

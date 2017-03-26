@@ -23,6 +23,7 @@
 		DC6E8B211DCBCC7300620B7C /* CheckerShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B1F1DCBCC7300620B7C /* CheckerShader.vsh */; };
 		DC8B22971D8F908C00C0BA11 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA998D1D8CC9F90019964F /* ViewController.swift */; };
 		DCC593D51DC8DDB40033986E /* ColorWheelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC593D41DC8DDB40033986E /* ColorWheelView.swift */; };
+		DCC680131E76F1CC00E2C51A /* GLSPolygonSprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC680121E76F1CC00E2C51A /* GLSPolygonSprite.swift */; };
 		DCD0ED651DCFD92400064BD1 /* OutlinedCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = DCD0ED641DCFD92400064BD1 /* OutlinedCircle.png */; };
 		DCD0ED6A1DCFF94500064BD1 /* VoronoiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD0ED691DCFF94500064BD1 /* VoronoiView.swift */; };
 		DCE0D1F01DCAA9610047F993 /* ColorList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE0D1EF1DCAA9610047F993 /* ColorList.swift */; };
@@ -84,6 +85,7 @@
 		DCAC32041DD17E5F006F85DA /* CoronaStructures.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaStructures.xcodeproj; path = ../CoronaStructures/CoronaStructures.xcodeproj; sourceTree = "<group>"; };
 		DCAC320B1DD17E66006F85DA /* CoronaGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaGL.xcodeproj; path = ../CoronaGL/CoronaGL.xcodeproj; sourceTree = "<group>"; };
 		DCC593D41DC8DDB40033986E /* ColorWheelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorWheelView.swift; sourceTree = "<group>"; };
+		DCC680121E76F1CC00E2C51A /* GLSPolygonSprite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLSPolygonSprite.swift; sourceTree = "<group>"; };
 		DCD0ED641DCFD92400064BD1 /* OutlinedCircle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OutlinedCircle.png; sourceTree = "<group>"; };
 		DCD0ED691DCFF94500064BD1 /* VoronoiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoronoiView.swift; sourceTree = "<group>"; };
 		DCE0D1EF1DCAA9610047F993 /* ColorList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorList.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				DCE0D1EF1DCAA9610047F993 /* ColorList.swift */,
 				DCE0D1F41DCAA9670047F993 /* ColorListItem.swift */,
 				DCC593D41DC8DDB40033986E /* ColorWheelView.swift */,
+				DCC680121E76F1CC00E2C51A /* GLSPolygonSprite.swift */,
 				DC130ED71D8DC753007304AF /* GLSVoronoiEdgeSprite.swift */,
 				DCEA998D1D8CC9F90019964F /* ViewController.swift */,
 				DCD0ED691DCFF94500064BD1 /* VoronoiView.swift */,
@@ -351,6 +354,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCC680131E76F1CC00E2C51A /* GLSPolygonSprite.swift in Sources */,
 				DCE0D1F51DCAA9670047F993 /* ColorListItem.swift in Sources */,
 				DCC593D51DC8DDB40033986E /* ColorWheelView.swift in Sources */,
 				DCE0D1F01DCAA9610047F993 /* ColorList.swift in Sources */,

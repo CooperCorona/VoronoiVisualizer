@@ -17,8 +17,27 @@ class VoronoiCellSprite: Hashable {
     let cell:VoronoiCell
     let sprite:GLSVoronoiSprite
     var neighbors:[VoronoiCellSprite] = []
+    ///In tiled diagrams, cells can overlap opposite
+    ///edges of the diagram. I don't want to change
+    ///the meaning of the original ```neighbors```
+    ///variable, so we now have ```allNeighbors```,
+    ///which includes this cell's neighbors AND
+    ///any of its potential opposite cells
+    ///(represented by the ```observers``` array).
+    var allNeighbors:[VoronoiCellSprite] {
+        //The first flat map returns all the arrays
+        //(filtering out nils), and the second flat
+        //map literally flattens the 2d array into a 1d array.
+        return self.neighbors + self.observers.flatMap() { $0.object?.neighbors } .flatMap() { $0 }
+    }
     let hashValue:Int
     var colorIndex = -1
+    ///Used in tiling. Sometimes, the oppositely edged
+    ///sprite is found before the original tiled sprite,
+    ///so we can't set the color index yet. We need to wait
+    ///until that cell has its color set, then propogate
+    ///that to all potential observers.
+    var observers:[WeakReference<VoronoiCellSprite>] = []
     
     init(cell:VoronoiCell, sprite:GLSVoronoiSprite, hash:Int) {
         self.cell = cell
@@ -28,6 +47,15 @@ class VoronoiCellSprite: Hashable {
     
     func makeNeighbors(cells:[VoronoiCellSprite]) {
         self.neighbors = self.cell.neighbors.flatMap() { n in cells.find() { c in c.cell === n } }
+    }
+    
+    func set(colorIndex:Int, from colors:[SCVector4]) {
+        self.colorIndex = colorIndex
+        self.sprite.shadeColor = colors[colorIndex].xyz
+        self.sprite.alpha = colors[colorIndex].a
+        for observer in self.observers {
+            observer.object?.set(colorIndex: colorIndex, from: colors)
+        }
     }
 
 }
@@ -42,7 +70,6 @@ class VoronoiView: NSObject {
     var viewSize:CGSize { return self.glView?.frame.size ?? CGSize(square: 1.0) }
     var voronoiBuffer = GLSFrameBuffer(size: CGSize(square: 1.0))
     var tileBuffer = GLSFrameBuffer(size: CGSize(square: 1.0))
-    var tileSprites:[GLSSprite] = []
     var pointContainer = GLSNode(position: CGPoint.zero, size: CGSize.zero)
     var edgeContainer = GLSNode(position: CGPoint.zero, size: CGSize.zero)
     let checkerBackground:GLSCheckerSprite
@@ -141,7 +168,12 @@ class VoronoiView: NSObject {
         
         
         self.diagram = diagram
-        let cells = diagram.sweep().cells
+        let cells:[VoronoiCell]
+        if self.isTiled {
+            cells = diagram.sweep().tile().cells
+        } else {
+            cells = diagram.sweep().cells
+        }
         
         self.cells = []
         for (i, cell) in cells.enumerated() {
@@ -173,22 +205,9 @@ class VoronoiView: NSObject {
         }
         self.tileBuffer.addChild(self.edgeContainer)
         
-        if self.isTiled {
-            let scales:[CGFloat] = [1.0, -1.0]
-            for yScale in scales {
-                for xScale in scales {
-                    let tSprite = GLSSprite(size: self.size / 2.0, texture: self.tileBuffer.ccTexture)
-                    tSprite.scaleX = xScale
-                    tSprite.scaleY = yScale
-                    tSprite.position = self.size.center - self.size.center * CGPoint(x: xScale, y: yScale) / 2.0
-                    self.voronoiBuffer.addChild(tSprite)
-                }
-            }
-        } else {
-            let tSprite = GLSSprite(size: self.size, texture: self.tileBuffer.ccTexture)
-            tSprite.anchor = CGPoint.zero
-            self.voronoiBuffer.addChild(tSprite)
-        }
+        let tSprite = GLSSprite(size: self.size, texture: self.tileBuffer.ccTexture)
+        tSprite.anchor = CGPoint.zero
+        self.voronoiBuffer.addChild(tSprite)
         
         var dict:[UnsafeMutableRawPointer:VoronoiCellSprite] = [:]
         for cell in self.cells {
@@ -203,6 +222,20 @@ class VoronoiView: NSObject {
     }
     
     func colorCells() {
+        guard let boundaries = self.diagram?.size else {
+            return
+        }
+        
+        //Reset the color indices, or else
+        //pairing opposite cells with their
+        //corresponding cells in tiled mode
+        //uses old values, which will
+        //either be incorrect or crash.
+        for cell in self.cells {
+            cell.colorIndex = -1
+        }
+        
+        let frame = CGRect(size: boundaries)
         self.random = GKMersenneTwisterRandomSource(seed: self.seed)
 
         var indices:[Int] = []
@@ -226,22 +259,59 @@ class VoronoiView: NSObject {
                 continue
             }
             
-            let validIndices = indices.filter() { i in !top.neighbors.contains() { n in n.colorIndex == i } }
+            let validIndices = indices.filter() { i in !top.allNeighbors.contains() { n in n.colorIndex == i } }
             var index = indices[self.random.nextInt(upperBound: indices.count)]
             if let colorIndex = validIndices.objectAtIndex(self.random.nextInt(upperBound: validIndices.count)) {
                 index = colorIndex
             }
             
-            top.colorIndex = index
-            top.sprite.shadeColor = self.colors[index].xyz
-            top.sprite.alpha = self.colors[index].w
+            top.set(colorIndex: index, from: self.colors)
             markedNodes.insert(top)
-            for neighbor in top.neighbors {
+            for neighbor in top.neighbors where frame.contains(neighbor.cell.voronoiPoint) {
                 queue.enqueue(neighbor)
             }
             
+            for neighbor in top.neighbors where !frame.contains(neighbor.cell.voronoiPoint) {
+                guard let opposite = self.oppositeCell(for: neighbor, cells: self.cells) else {
+                    continue
+                }
+                
+                if opposite.colorIndex == -1 {
+                    opposite.observers.append(WeakReference(object: neighbor))
+                } else {
+                    neighbor.set(colorIndex: opposite.colorIndex, from: self.colors)
+                }
+            }
+            
         }
-        
+    }
+    
+    fileprivate func oppositeCell(for neighbor:VoronoiCellSprite, cells:[VoronoiCellSprite]) -> VoronoiCellSprite? {
+        //TODO: Some cells originally touched both the left and right (or up and down)
+        //boundaries, so I might need to return an array?
+        var offset = CGPoint.zero
+        if neighbor.cell.boundaryEdges.contains(.Left) {
+            offset.x = +1.0
+        }
+        if neighbor.cell.boundaryEdges.contains(.Right) {
+            offset.x = -1.0
+        }
+        if neighbor.cell.boundaryEdges.contains(.Down) {
+            offset.y = +1.0
+        }
+        if neighbor.cell.boundaryEdges.contains(.Up) {
+            offset.y = -1.0
+        }
+        let originalPoint = neighbor.cell.voronoiPoint + offset * neighbor.cell.boundaries
+        if let cell = cells.find({ $0.cell.voronoiPoint ~= originalPoint && neighbor.cell.boundaries.contains(point: $0.cell.voronoiPoint) }) {
+            return cell
+        } else if let cell = cells.find({ $0.cell.voronoiPoint.x ~= originalPoint.x && neighbor.cell.boundaries.contains(point: $0.cell.voronoiPoint) }) {
+            return cell
+        } else if let cell = cells.find({ $0.cell.voronoiPoint.y ~= originalPoint.y && neighbor.cell.boundaries.contains(point: $0.cell.voronoiPoint) }) {
+            return cell
+        } else {
+            return nil
+        }
     }
     
     func colorEdges() {

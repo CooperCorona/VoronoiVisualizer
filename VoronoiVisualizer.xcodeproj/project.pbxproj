@@ -15,13 +15,18 @@
 		DC130ED41D8DC6D8007304AF /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC130ED31D8DC6D8007304AF /* ColorShader.fsh */; };
 		DC130ED81D8DC753007304AF /* GLSVoronoiEdgeSprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC130ED71D8DC753007304AF /* GLSVoronoiEdgeSprite.swift */; };
 		DC130EDA1D8DE2A9007304AF /* WindowResizeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */; };
+		DC17C7311EA5AED900822E54 /* BilinearGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC17C7301EA5AED900822E54 /* BilinearGradient.swift */; };
+		DC17C7371EA5B0F500822E54 /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC17C7361EA5B0F500822E54 /* SortedArray.swift */; };
 		DC1ADA4E1DBD2E2900201A32 /* ColorSliderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ADA4D1DBD2E2900201A32 /* ColorSliderController.swift */; };
+		DC1C22FE1EA7BFDD005183B3 /* BilinearLinkedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1C22FD1EA7BFDD005183B3 /* BilinearLinkedList.swift */; };
 		DC3BED3F1DC9155B002E7AD8 /* ColorWheelShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC3BED3D1DC9155B002E7AD8 /* ColorWheelShader.fsh */; };
 		DC3BED401DC9155B002E7AD8 /* ColorWheelShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC3BED3E1DC9155B002E7AD8 /* ColorWheelShader.vsh */; };
 		DC6E8B051DCBC36400620B7C /* CheckeredBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B041DCBC36400620B7C /* CheckeredBackground.png */; };
 		DC6E8B201DCBCC7300620B7C /* CheckerShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B1E1DCBCC7300620B7C /* CheckerShader.fsh */; };
 		DC6E8B211DCBCC7300620B7C /* CheckerShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B1F1DCBCC7300620B7C /* CheckerShader.vsh */; };
+		DC7D14871EA6970C00118E46 /* BilinearGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7D14861EA6970C00118E46 /* BilinearGradientView.swift */; };
 		DC8B22971D8F908C00C0BA11 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEA998D1D8CC9F90019964F /* ViewController.swift */; };
+		DC9FFD621EA8FCE40058493C /* LightSourceGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9FFD611EA8FCE40058493C /* LightSourceGradient.swift */; };
 		DCC593D51DC8DDB40033986E /* ColorWheelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC593D41DC8DDB40033986E /* ColorWheelView.swift */; };
 		DCC680131E76F1CC00E2C51A /* GLSPolygonSprite.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC680121E76F1CC00E2C51A /* GLSPolygonSprite.swift */; };
 		DCD0ED651DCFD92400064BD1 /* OutlinedCircle.png in Resources */ = {isa = PBXBuildFile; fileRef = DCD0ED641DCFD92400064BD1 /* OutlinedCircle.png */; };
@@ -75,12 +80,17 @@
 		DC130ED31D8DC6D8007304AF /* ColorShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorShader.fsh; sourceTree = "<group>"; };
 		DC130ED71D8DC753007304AF /* GLSVoronoiEdgeSprite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLSVoronoiEdgeSprite.swift; sourceTree = "<group>"; };
 		DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowResizeController.swift; sourceTree = "<group>"; };
+		DC17C7301EA5AED900822E54 /* BilinearGradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BilinearGradient.swift; sourceTree = "<group>"; };
+		DC17C7361EA5B0F500822E54 /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
 		DC1ADA4D1DBD2E2900201A32 /* ColorSliderController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSliderController.swift; sourceTree = "<group>"; };
+		DC1C22FD1EA7BFDD005183B3 /* BilinearLinkedList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BilinearLinkedList.swift; sourceTree = "<group>"; };
 		DC3BED3D1DC9155B002E7AD8 /* ColorWheelShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ColorWheelShader.fsh; path = ../../NoiseGenerator/NoiseGenerator/ColorWheelShader.fsh; sourceTree = "<group>"; };
 		DC3BED3E1DC9155B002E7AD8 /* ColorWheelShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ColorWheelShader.vsh; path = ../../NoiseGenerator/NoiseGenerator/ColorWheelShader.vsh; sourceTree = "<group>"; };
 		DC6E8B041DCBC36400620B7C /* CheckeredBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CheckeredBackground.png; path = "../../../Xcode PNGs/Noise Generator/CheckeredBackground.png"; sourceTree = "<group>"; };
 		DC6E8B1E1DCBCC7300620B7C /* CheckerShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CheckerShader.fsh; sourceTree = "<group>"; };
 		DC6E8B1F1DCBCC7300620B7C /* CheckerShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CheckerShader.vsh; sourceTree = "<group>"; };
+		DC7D14861EA6970C00118E46 /* BilinearGradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BilinearGradientView.swift; sourceTree = "<group>"; };
+		DC9FFD611EA8FCE40058493C /* LightSourceGradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightSourceGradient.swift; sourceTree = "<group>"; };
 		DCAC31FE1DD17E55006F85DA /* CoronaConvenience.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaConvenience.xcodeproj; path = ../CoronaConvenience/CoronaConvenience.xcodeproj; sourceTree = "<group>"; };
 		DCAC32041DD17E5F006F85DA /* CoronaStructures.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaStructures.xcodeproj; path = ../CoronaStructures/CoronaStructures.xcodeproj; sourceTree = "<group>"; };
 		DCAC320B1DD17E66006F85DA /* CoronaGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoronaGL.xcodeproj; path = ../CoronaGL/CoronaGL.xcodeproj; sourceTree = "<group>"; };
@@ -189,12 +199,17 @@
 				DC130ECC1D8DBE65007304AF /* WhiteCircle.pdf */,
 				DC6E8B091DCBC36E00620B7C /* Shaders */,
 				DCEA998B1D8CC9F90019964F /* AppDelegate.swift */,
+				DC17C7301EA5AED900822E54 /* BilinearGradient.swift */,
+				DC7D14861EA6970C00118E46 /* BilinearGradientView.swift */,
 				DC1ADA4D1DBD2E2900201A32 /* ColorSliderController.swift */,
+				DC1C22FD1EA7BFDD005183B3 /* BilinearLinkedList.swift */,
 				DCE0D1EF1DCAA9610047F993 /* ColorList.swift */,
 				DCE0D1F41DCAA9670047F993 /* ColorListItem.swift */,
 				DCC593D41DC8DDB40033986E /* ColorWheelView.swift */,
 				DCC680121E76F1CC00E2C51A /* GLSPolygonSprite.swift */,
 				DC130ED71D8DC753007304AF /* GLSVoronoiEdgeSprite.swift */,
+				DC9FFD611EA8FCE40058493C /* LightSourceGradient.swift */,
+				DC17C7361EA5B0F500822E54 /* SortedArray.swift */,
 				DCEA998D1D8CC9F90019964F /* ViewController.swift */,
 				DCD0ED691DCFF94500064BD1 /* VoronoiView.swift */,
 				DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */,
@@ -356,9 +371,14 @@
 			files = (
 				DCC680131E76F1CC00E2C51A /* GLSPolygonSprite.swift in Sources */,
 				DCE0D1F51DCAA9670047F993 /* ColorListItem.swift in Sources */,
+				DC1C22FE1EA7BFDD005183B3 /* BilinearLinkedList.swift in Sources */,
 				DCC593D51DC8DDB40033986E /* ColorWheelView.swift in Sources */,
 				DCE0D1F01DCAA9610047F993 /* ColorList.swift in Sources */,
+				DC17C7371EA5B0F500822E54 /* SortedArray.swift in Sources */,
 				DC130ED81D8DC753007304AF /* GLSVoronoiEdgeSprite.swift in Sources */,
+				DC9FFD621EA8FCE40058493C /* LightSourceGradient.swift in Sources */,
+				DC7D14871EA6970C00118E46 /* BilinearGradientView.swift in Sources */,
+				DC17C7311EA5AED900822E54 /* BilinearGradient.swift in Sources */,
 				DC130EDA1D8DE2A9007304AF /* WindowResizeController.swift in Sources */,
 				DC8B22971D8F908C00C0BA11 /* ViewController.swift in Sources */,
 				DCD0ED6A1DCFF94500064BD1 /* VoronoiView.swift in Sources */,

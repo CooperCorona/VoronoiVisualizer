@@ -8,6 +8,7 @@
 
 import Cocoa
 import CoronaConvenience
+import CoronaStructures
 
 class ColorSliderController: NSViewController, NSTextFieldDelegate, ColorWheelViewDelegate, ColorListDelegate, ResizableViewController {
 
@@ -72,6 +73,17 @@ class ColorSliderController: NSViewController, NSTextFieldDelegate, ColorWheelVi
     override func viewDidAppear() {
         super.viewDidAppear()
         self.colorWheelWrapper.colorWheel.display()
+        
+        let bgv = BilinearGradientView()
+        bgv.frame = NSRect(square: 128.0)
+        bgv.gradient.add(value: SCVector4.redColor, at: CGPoint(x: 0.0, y: 0.0))
+        bgv.gradient.add(value: SCVector4.yellowColor, at: CGPoint(x: 1.0, y: 0.0))
+        bgv.gradient.add(value: SCVector4.blueColor, at: CGPoint(x: 0.0, y: 1.0))
+        bgv.gradient.add(value: SCVector4.greenColor, at: CGPoint(x: 1.0, y: 1.0))
+//        bgv.gradient.add(value: SCVector4.blackColor, at: CGPoint(x: 0.75, y: 0.6))
+//        bgv.gradient.add(value: SCVector4.magentaColor, at: CGPoint(x: 0.35, y: 0.4))
+        bgv.wantsLayer = true
+        self.view.addSubview(bgv)
     }
     
     func viewDidResize() {

@@ -112,6 +112,7 @@ class VoronoiView: NSObject {
             }
         }
     }
+    var gradient = BilinearGradient()
     
     init(glView:OmniGLView2d?) {
         self.glView = glView
@@ -123,6 +124,12 @@ class VoronoiView: NSObject {
         
         self.pointContainer.hidden = true
         self.edgeContainer.hidden  = true
+        
+        self.gradient.add(point: CGPoint(x: 0.0, y: 0.0), color: SCVector4.redColor)
+        self.gradient.add(point: CGPoint(x: 0.0, y: 1.0), color: SCVector4.yellowColor)
+        self.gradient.add(point: CGPoint(x: 1.0, y: 0.0), color: SCVector4.blueColor)
+        self.gradient.add(point: CGPoint(x: 1.0, y: 1.0), color: SCVector4.greenColor)
+        self.gradient.add(point: CGPoint(x: 0.5, y: 0.5), color: SCVector4.whiteColor)
     }
     
     func display() {
@@ -217,7 +224,19 @@ class VoronoiView: NSObject {
             cell.neighbors = cell.cell.neighbors.flatMap() { dict[Unmanaged.passUnretained($0).toOpaque()] }
         }
         
-        self.colorCells()
+//        self.colorCells()
+        /*
+        print("\(self.gradient.color(at: CGPoint.zero, log: true))")
+        print("\(self.gradient.color(at: CGPoint(x: 0.1)))")
+        print("\(self.gradient.color(at: CGPoint(y: 0.1)))")
+        print("\(self.gradient.color(at: CGPoint(xy: 0.1)))")
+        */
+        for cell in self.cells {
+            let p = cell.cell.voronoiPoint * (1.0 / cell.cell.boundaries)
+            let color = self.gradient.color(at: p)
+            cell.sprite.shadeColor = color.xyz
+            cell.sprite.alpha = color.a
+        }
         self.colorEdges()
     }
     

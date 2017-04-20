@@ -447,6 +447,10 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
         }
     }
     
+    func gradientItemClicked(notification:Notification) {
+        
+    }
+    
     @IBAction func trianglesCheckboxChanged(_ sender: NSButton) {
         self.voronoiView.asTriangles = sender.boolValue
         self.voronoiView.calculate()

@@ -178,7 +178,7 @@ open class ColorWheelViewWrapper: NSView {
 //        if saturation ~= 0.0 {
 //            self.knobImage.frame.center = self.frame.size.center
 //        } else {
-            let angle = CGFloat(2.0 * M_PI) * hue
+            let angle = 2.0 * CGFloat.pi * hue
             let radius = saturation * self.frame.width / 2.0
             self.knobImage.frame.center = self.frame.size.center + CGPoint(angle: angle, length: radius)
 //        }

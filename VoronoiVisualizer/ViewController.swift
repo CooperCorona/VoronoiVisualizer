@@ -91,6 +91,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     override func viewWillAppear() {
         super.viewWillAppear()
         NotificationCenter.default.addObserver(self, selector: #selector(exportButtonPressed), name: Notification.Name(rawValue: AppDelegate.ExportImageNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(gradientItemClicked(notification:)), name: Notification.Name(rawValue: AppDelegate.GradientItemClickedNotification), object: nil)
     }
     
     override var representedObject: Any? {
@@ -448,7 +449,8 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     }
     
     func gradientItemClicked(notification:Notification) {
-        
+        let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorController") as! NSViewController
+        self.presentViewControllerAsModalWindow(controller)
     }
     
     @IBAction func trianglesCheckboxChanged(_ sender: NSButton) {

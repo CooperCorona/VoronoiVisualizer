@@ -12,7 +12,6 @@ import CoronaStructures
 
 class BilinearGradientView: NSView {
     
-//    var gradient = BilinearGradient()
     var gradient = LightSourceGradient(zero: SCVector4())
 
     override func draw(_ dirtyRect: NSRect) {

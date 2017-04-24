@@ -41,9 +41,9 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     @IBOutlet weak var columnTextField: NSTextField!
     @IBOutlet weak var widthTextField: NSTextField!
     @IBOutlet weak var heightTextField: NSTextField!
-    @IBOutlet weak var edgesCheckbox: NSButton!
+    @IBOutlet weak var edgePopUpButton: NSPopUpButton!
     @IBOutlet weak var pointsCheckbox: NSButton!
-    @IBOutlet weak var trianglesCheckbox: NSButton!
+    
     var previousText:[TextFieldTag:String] = [:]
     var bufferSize:CGSize {
         get { return CGSize(width: self.widthTextField.doubleValue, height: self.heightTextField.doubleValue) }
@@ -91,7 +91,6 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     override func viewWillAppear() {
         super.viewWillAppear()
         NotificationCenter.default.addObserver(self, selector: #selector(exportButtonPressed), name: Notification.Name(rawValue: AppDelegate.ExportImageNotification), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(gradientItemClicked(notification:)), name: Notification.Name(rawValue: AppDelegate.GradientItemClickedNotification), object: nil)
     }
     
     override var representedObject: Any? {
@@ -167,6 +166,24 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     
     func viewDidResize() {
         self.voronoiView.viewDidResize()
+    }
+    
+    override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        switch segue.identifier {
+        case "edgeColorSegue"?:
+            guard let destination = segue.destinationController as? ColorChooserController else {
+                break
+            }
+            destination.doneButtonHidden = false
+            destination.set(color: NSColor(vector4: self.voronoiView.edgeColor))
+            destination.dismissHandler = { [unowned self] in
+                self.voronoiView.edgeColor = $0.getVector4()
+                self.voronoiView.display()
+            }
+        default:
+            break
+        }
     }
     
     // MARK: - Parsing Points
@@ -361,8 +378,18 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
         self.voronoiView.display()
     }
     
-    @IBAction func edgesCheckboxChanged(_ sender: Any) {
-        self.voronoiView.renderEdges = self.edgesCheckbox.integerValue != 0
+    @IBAction func edgePopUpButtonChanged(_ sender: NSPopUpButton) {
+        switch sender.selectedItem?.title {
+        case "None"?:
+            self.voronoiView.edgeRenderingMode = .none
+        case "Edges"?:
+            self.voronoiView.edgeRenderingMode = .edges
+        case "Outline"?:
+            self.voronoiView.edgeRenderingMode = .outline
+        default:
+            break
+        }
+        self.voronoiView.calculate()
         self.voronoiView.display()
     }
     
@@ -372,28 +399,24 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     }
     
     @IBAction func colorButtonPressed(_ sender: Any) {
-        let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorSliderController") as! ColorSliderController
-        let _ = colorController.colorList.set(colors: self.voronoiView.colors.map() { NSColor(vector4: $0) })
-        colorController.dismissHandler = {
-            self.voronoiView.colors = $0.map() { c in c.getVector4() }
-            self.voronoiView.calculate()
-            self.voronoiView.display()
+        let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorController") as! ColorSplitViewController
+        colorController.coloringScheme = self.voronoiView.coloringScheme
+        if let colorTab = colorController.childViewControllers.find({ $0 is ColorTabViewController }) as? ColorTabViewController {
+            let dismissHandler:(VoronoiViewColoringScheme) -> Void = { [unowned self] in
+                self.voronoiView.coloringScheme = $0
+                self.voronoiView.calculate()
+                self.voronoiView.display()
+            }
+            for child in colorTab.childViewControllers {
+                if let schemeController = child as? ColoringSchemeViewController {
+                    schemeController.dismissHandler = dismissHandler
+                }
+            }
         }
         self.presentViewControllerAsSheet(colorController)
     }
     
-    @IBAction func edgeColorButtonPressed(_ sender: Any) {
-        let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorSliderController") as! ColorSliderController
-        colorController.displayColorList = false
-        let _ = colorController.colorList.set(colors: self.voronoiView.colors.map() { NSColor(vector4: $0) })
-        colorController.initialColor = NSColor(vector4: self.voronoiView.edgeColor)
-        colorController.dismissHandler = {
-            self.voronoiView.edgeColor = $0.first!.getVector4()
-            self.voronoiView.display()
-        }
-        self.presentViewControllerAsSheet(colorController)
-    }
-    
+
     @IBAction func relaxButtonPressed(_ sender: Any) {
         guard let diagram = self.voronoiView.diagram else {
             return
@@ -453,11 +476,6 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
         self.presentViewControllerAsModalWindow(controller)
     }
     
-    @IBAction func trianglesCheckboxChanged(_ sender: NSButton) {
-        self.voronoiView.asTriangles = sender.boolValue
-        self.voronoiView.calculate()
-        self.display()
-    }
     
     @IBAction func tiledCheckboxChanged(_ sender: NSButton) {
         self.voronoiView.isTiled = sender.integerValue == 0 ? false : true

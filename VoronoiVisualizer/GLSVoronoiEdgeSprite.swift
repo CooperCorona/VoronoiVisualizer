@@ -12,6 +12,12 @@ import CoronaStructures
 import CoronaGL
 import Voronoi
 
+enum EdgeRenderingMode: String {
+    case none = "None"
+    case edges = "Edges"
+    case outline = "Outline"
+}
+
 class GLSVoronoiEdgeSprite: GLSNode {
 
     struct Vertex {
@@ -37,7 +43,7 @@ class GLSVoronoiEdgeSprite: GLSNode {
         }
     }
     
-    init(cell:VoronoiCell, color:SCVector3, thickness:CGFloat) {
+    init(cell:VoronoiCell, color:SCVector3, thickness:CGFloat, mode:EdgeRenderingMode = .edges) {
         let vertices = cell.makeVertexLoop()
         var edgeVertices:[Vertex] = []
         let rotate90 = SCMatrix4(rotation2D: CGFloat(M_PI_2))
@@ -47,6 +53,21 @@ class GLSVoronoiEdgeSprite: GLSNode {
                 next = vertices[0]
             } else {
                 next = vertices[i + 1]
+            }
+            if mode != .outline {
+                //If the mode is not outline, we don't want
+                //to render edges on the actual edges of the
+                //rectangle. Thus, we need to check if the edges
+                //lie on the boundaries of the diagram.
+                if vertex.x == 0.0 && next.x == 0.0 {
+                    continue
+                } else if vertex.x == cell.boundaries.width && next.x == cell.boundaries.width {
+                    continue
+                } else if vertex.y == 0.0 && next.y == 0.0 {
+                    continue
+                } else if vertex.y == cell.boundaries.height && next.y == cell.boundaries.height {
+                    continue
+                }
             }
             let normal = rotate90 * (next - vertex).unit()
             let tl = vertex + normal * thickness

@@ -77,6 +77,9 @@ class ColorAnchors: NSObject {
         guard let index = self.selectedAnchorIndex else {
             return
         }
+        guard self.anchors[index].mobile else {
+            return
+        }
         self.selectedAnchorIndex = nil
         self.anchors[index].view?.removeFromSuperview()
         self.anchors.remove(at: index)
@@ -84,9 +87,6 @@ class ColorAnchors: NSObject {
     
     func set(color:NSColor) {
         guard let index = self.selectedAnchorIndex else {
-            return
-        }
-        guard self.anchors[index].mobile else {
             return
         }
         self.anchors[index].color = color.getVector4()

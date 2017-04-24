@@ -10,11 +10,11 @@ import Cocoa
 import CoronaConvenience
 import CoronaStructures
 
-private struct LightSource<T: Interpolatable> {
-    var point:CGPoint
-    var value:T
+public struct LightSource<T: Interpolatable> {
+    public var point:CGPoint
+    public var value:T
     
-    func distance(from point:CGPoint) -> LightSourceDistance<T> {
+    fileprivate func distance(from point:CGPoint) -> LightSourceDistance<T> {
         return LightSourceDistance(value: value, distance: self.point.distanceFrom(point))
     }
 }
@@ -30,7 +30,7 @@ private struct LightSourceDistance<T: Interpolatable> {
 
 public struct LightSourceGradient<T: Interpolatable> {
 
-    private var lights:[LightSource<T>] = []
+    private(set) var lights:[LightSource<T>] = []
     public let zero:T
     
     public init(zero:T) {

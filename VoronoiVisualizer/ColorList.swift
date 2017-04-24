@@ -98,13 +98,23 @@ class ColorList: NSObject {
         return view
     }
     
-    func set(colors:[NSColor]) -> Bool {
+    @discardableResult func set(colors:[NSColor]) -> Bool {
         guard colors.count >= 2 else {
             return false
+        }
+        var superView:NSView? = nil
+        for view in self.views {
+            if let sv = view.superview {
+                superView = sv
+            }
+            view.removeFromSuperview()
         }
         self.views = colors.map() { ColorListItem(frame: NSRect(square: self.viewSize), color: $0, owner: self) }
         self.selectedViewIndex = 0
         self.views.first?.isSelected = true
+        for view in self.views {
+            superView?.addSubview(view)
+        }
         return true
     }
     

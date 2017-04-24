@@ -22,23 +22,40 @@ class ColorChooserController: NSViewController, ColorWheelViewDelegate {
     weak var colorChooserDelegate:ColorChooserDelegate? = nil
     
     private(set) var color = NSColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+    private var colorToLoad:NSColor? = nil
     @IBOutlet weak var colorWheel: ColorWheelViewWrapper!
     @IBOutlet weak var brightnessSlider: NSSlider!
     @IBOutlet weak var redTextField: NSTextField!
     @IBOutlet weak var greenTextField: NSTextField!
     @IBOutlet weak var blueTextField: NSTextField!
     @IBOutlet weak var alphaTextField: NSTextField!
+    @IBOutlet weak var doneButton: NSButton!
+    var doneButtonHidden = true
+    var dismissHandler:((NSColor) -> Void)? = nil
     
     // MARK: - Setup
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.colorWheel.delegate = self
+        self.doneButton.isHidden = self.doneButtonHidden
+        
+        if let colorToLoad = self.colorToLoad {
+            self.set(color: colorToLoad)
+        }
     }
     
     func set(color:NSColor) {
+        guard let colorWheel = self.colorWheel else {
+            //When segueing to this controller, it's possible
+            //none of the outlets are connected yet, so we
+            //have to store the color and set it when the
+            //outlets are instantiated.
+            self.colorToLoad = color
+            return
+        }
         let comps = color.getComponents()
-        self.colorWheel.set(red: comps[0], green: comps[1], blue: comps[2], alpha: comps[3])
+        colorWheel.set(red: comps[0], green: comps[1], blue: comps[2], alpha: comps[3])
         self.redTextField.integerValue = Int(comps[0] * 255.0)
         self.greenTextField.integerValue = Int(comps[1] * 255.0)
         self.blueTextField.integerValue = Int(comps[2] * 255.0)
@@ -129,6 +146,11 @@ class ColorChooserController: NSViewController, ColorWheelViewDelegate {
         self.brightnessSlider.doubleValue = 1.0
         self.colorWheel.brightness = 1.0
         self.colorWheel.display()
+    }
+    
+    @IBAction func doneButtonPressed(_ sender: Any) {
+        self.dismissHandler?(self.color)
+        self.dismiss(self)
     }
     
     func colorChanged(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {

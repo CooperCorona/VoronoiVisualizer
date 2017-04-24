@@ -14,6 +14,7 @@ import Voronoi
 import GameKit
 
 class VoronoiCellSprite: Hashable {
+    
     let cell:VoronoiCell
     let sprite:GLSVoronoiSprite
     var neighbors:[VoronoiCellSprite] = []
@@ -91,9 +92,14 @@ class VoronoiView: NSObject {
             self.colorEdges()
         }
     }
-    var renderEdges = false {
+    var edgeRenderingMode:EdgeRenderingMode = .edges {
         didSet {
-            self.edgeContainer.hidden = !self.renderEdges
+            switch self.edgeRenderingMode {
+            case .none:
+                self.edgeContainer.hidden = true
+            case .edges, .outline:
+                self.edgeContainer.hidden = false
+            }
         }
     }
     var renderPoints = false {
@@ -101,7 +107,6 @@ class VoronoiView: NSObject {
             self.pointContainer.hidden = !self.renderPoints
         }
     }
-    var asTriangles = false
     private var seed:UInt64 = 0
     private var random = GKMersenneTwisterRandomSource(seed: 0)
     
@@ -112,7 +117,7 @@ class VoronoiView: NSObject {
             }
         }
     }
-    var gradient = BilinearGradient()
+    var coloringScheme:VoronoiViewColoringScheme = DiscreteColoringScheme(colors: SCVector4.rainbowColors)
     
     init(glView:OmniGLView2d?) {
         self.glView = glView
@@ -124,12 +129,6 @@ class VoronoiView: NSObject {
         
         self.pointContainer.hidden = true
         self.edgeContainer.hidden  = true
-        
-        self.gradient.add(point: CGPoint(x: 0.0, y: 0.0), color: SCVector4.redColor)
-        self.gradient.add(point: CGPoint(x: 0.0, y: 1.0), color: SCVector4.yellowColor)
-        self.gradient.add(point: CGPoint(x: 1.0, y: 0.0), color: SCVector4.blueColor)
-        self.gradient.add(point: CGPoint(x: 1.0, y: 1.0), color: SCVector4.greenColor)
-        self.gradient.add(point: CGPoint(x: 0.5, y: 0.5), color: SCVector4.whiteColor)
     }
     
     func display() {
@@ -170,7 +169,7 @@ class VoronoiView: NSObject {
         self.pointContainer.children.removeAll()
         self.edgeContainer.children.removeAll()
         //Moves it to front.
-        let _ = self.glView?.removeChild(self.pointContainer)
+        self.glView?.removeChild(self.pointContainer)
         self.glView?.addChild(self.pointContainer)
         
         
@@ -184,37 +183,25 @@ class VoronoiView: NSObject {
         
         self.cells = []
         for (i, cell) in cells.enumerated() {
-            if self.asTriangles {
-                let verts = cell.makeVertexLoop()
-                let center = verts.reduce(CGPoint.zero) { $0 + $1 } / CGFloat(verts.count)
-                let triangles = (0..<verts.count).map() { [center, verts[$0], verts[($0 + 1) % verts.count]] }
-                for (j, triangle) in triangles.enumerated() {
-                    let polygon = GLSPolygonSprite(polygonVertices: triangle, boundaries: CGRect(size: self.size))
-                    polygon.texture = "White Tile"
-                    if let c = self.colors.randomElement() {
-                        polygon.shadeColor = c.xyz
-                        polygon.alpha = c.a
-                    }
-                    self.tileBuffer.addChild(polygon)
-                }
-            } else {
-                let s = GLSVoronoiSprite(cell: cell, boundaries: self.size)
-                self.tileBuffer.addChild(s)
-                self.cells.append(VoronoiCellSprite(cell: cell, sprite: s, hash: i))
-            }
+            let s = GLSVoronoiSprite(cell: cell, boundaries: self.size)
+            self.tileBuffer.addChild(s)
+            self.cells.append(VoronoiCellSprite(cell: cell, sprite: s, hash: i))
             
             let size = max(min(12.0, 36.0 / CGFloat(diagram.points.count) * 12.0), 6.0)
             let vs = GLSSprite(position: cell.voronoiPoint, size: CGSize(square: size), texture: "Outlined Circle")
             self.pointContainer.addChild(vs)
             
-            let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector3.blackColor, thickness: 1.0)
+            let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector3.blackColor, thickness: 1.0, mode: self.edgeRenderingMode)
             self.edgeContainer.addChild(es)
         }
-        self.tileBuffer.addChild(self.edgeContainer)
         
         let tSprite = GLSSprite(size: self.size, texture: self.tileBuffer.ccTexture)
         tSprite.anchor = CGPoint.zero
         self.voronoiBuffer.addChild(tSprite)
+        self.voronoiBuffer.removeChild(self.edgeContainer)
+        self.voronoiBuffer.addChild(self.edgeContainer)
+//        self.glView?.removeChild(self.edgeContainer)
+//        self.glView?.addChild(self.edgeContainer)
         
         var dict:[UnsafeMutableRawPointer:VoronoiCellSprite] = [:]
         for cell in self.cells {
@@ -224,19 +211,7 @@ class VoronoiView: NSObject {
             cell.neighbors = cell.cell.neighbors.flatMap() { dict[Unmanaged.passUnretained($0).toOpaque()] }
         }
         
-//        self.colorCells()
-        /*
-        print("\(self.gradient.color(at: CGPoint.zero, log: true))")
-        print("\(self.gradient.color(at: CGPoint(x: 0.1)))")
-        print("\(self.gradient.color(at: CGPoint(y: 0.1)))")
-        print("\(self.gradient.color(at: CGPoint(xy: 0.1)))")
-        */
-        for cell in self.cells {
-            let p = cell.cell.voronoiPoint * (1.0 / cell.cell.boundaries)
-            let color = self.gradient.color(at: p)
-            cell.sprite.shadeColor = color.xyz
-            cell.sprite.alpha = color.a
-        }
+        self.colorCells()
         self.colorEdges()
     }
     
@@ -244,64 +219,25 @@ class VoronoiView: NSObject {
         guard let boundaries = self.diagram?.size else {
             return
         }
-        
-        //Reset the color indices, or else
-        //pairing opposite cells with their
-        //corresponding cells in tiled mode
-        //uses old values, which will
-        //either be incorrect or crash.
-        for cell in self.cells {
-            cell.colorIndex = -1
-        }
-        
         let frame = CGRect(size: boundaries)
-        self.random = GKMersenneTwisterRandomSource(seed: self.seed)
-
-        var indices:[Int] = []
-        for i in 0..<self.colors.count {
-            indices.append(i)
-        }
         
-        guard let first = self.cells.first else {
-            return
-        }
-        
-        //This algorithm is designed so that no 2 adjacent cells
-        //have the same color. It doesn't work perfectly, but it
-        //works for the majority of cells.
-        var markedNodes = Set<VoronoiCellSprite>()
-        var queue = Queue<VoronoiCellSprite>()
-        queue.enqueue(first)
-        
-        while let top = queue.dequeue() {
-            if markedNodes.contains(top) {
+        for cell in self.cells where frame.contains(cell.cell.voronoiPoint) {
+            guard cell.colorIndex == -1 else {
                 continue
             }
-            
-            let validIndices = indices.filter() { i in !top.allNeighbors.contains() { n in n.colorIndex == i } }
-            var index = indices[self.random.nextInt(upperBound: indices.count)]
-            if let colorIndex = validIndices.objectAtIndex(self.random.nextInt(upperBound: validIndices.count)) {
-                index = colorIndex
+            let (color, colorIndex) = self.coloringScheme.color(for: cell)
+            if let index = colorIndex {
+                cell.colorIndex = index
             }
-            
-            top.set(colorIndex: index, from: self.colors)
-            markedNodes.insert(top)
-            for neighbor in top.neighbors where frame.contains(neighbor.cell.voronoiPoint) {
-                queue.enqueue(neighbor)
+            cell.sprite.shadeColor = color.xyz
+            cell.sprite.alpha = color.a
+        }
+        for cell in self.cells where !frame.contains(cell.cell.voronoiPoint) {
+            if let opposite = self.oppositeCell(for: cell, cells: self.cells) {
+                cell.colorIndex = opposite.colorIndex
+                cell.sprite.shadeColor = opposite.sprite.shadeColor
+                cell.sprite.alpha = opposite.sprite.alpha
             }
-            
-            for neighbor in top.neighbors where !frame.contains(neighbor.cell.voronoiPoint) {
-                guard let opposite = self.oppositeCell(for: neighbor, cells: self.cells) else {
-                    continue
-                }
-                
-                if opposite.colorIndex == -1 {
-                    opposite.observers.append(WeakReference(object: neighbor))
-                } else {
-                    neighbor.set(colorIndex: opposite.colorIndex, from: self.colors)
-                }
-            }
-            
         }
     }
     

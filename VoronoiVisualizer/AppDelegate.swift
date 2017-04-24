@@ -20,13 +20,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     static let ExportImageNotification = "com.coopercorona.VoronoiVisualizer.ExportImageNotification"
-    static let GradientItemClickedNotification = "com.coopercorona.VoronoiVisualizer.GradientItemClickedNotification"
     
     @IBAction func exportMenuItemClicked(_ sender: Any) {
         NotificationCenter.default.post(name: Notification.Name(rawValue: AppDelegate.ExportImageNotification), object: self)
-    }
-    @IBAction func gradientItemClicked(_ sender: Any) {
-        NotificationCenter.default.post(name: Notification.Name(rawValue: AppDelegate.GradientItemClickedNotification), object: self)
     }
 
 }

@@ -92,6 +92,7 @@ class VoronoiView: NSObject {
             self.colorEdges()
         }
     }
+    var edgeThickness:CGFloat = 1.0
     var edgeRenderingMode:EdgeRenderingMode = .edges {
         didSet {
             switch self.edgeRenderingMode {
@@ -172,7 +173,6 @@ class VoronoiView: NSObject {
         self.glView?.removeChild(self.pointContainer)
         self.glView?.addChild(self.pointContainer)
         
-        
         self.diagram = diagram
         let cells:[VoronoiCell]
         if self.isTiled {
@@ -191,7 +191,7 @@ class VoronoiView: NSObject {
             let vs = GLSSprite(position: cell.voronoiPoint, size: CGSize(square: size), texture: "Outlined Circle")
             self.pointContainer.addChild(vs)
             
-            let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector3.blackColor, thickness: 1.0, mode: self.edgeRenderingMode)
+            let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector3.blackColor, thickness: self.edgeThickness, mode: self.edgeRenderingMode)
             self.edgeContainer.addChild(es)
         }
         
@@ -200,8 +200,6 @@ class VoronoiView: NSObject {
         self.voronoiBuffer.addChild(tSprite)
         self.voronoiBuffer.removeChild(self.edgeContainer)
         self.voronoiBuffer.addChild(self.edgeContainer)
-//        self.glView?.removeChild(self.edgeContainer)
-//        self.glView?.addChild(self.edgeContainer)
         
         var dict:[UnsafeMutableRawPointer:VoronoiCellSprite] = [:]
         for cell in self.cells {

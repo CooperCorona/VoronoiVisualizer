@@ -17,13 +17,13 @@
 		DC130EDA1D8DE2A9007304AF /* WindowResizeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */; };
 		DC17C7371EA5B0F500822E54 /* SortedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC17C7361EA5B0F500822E54 /* SortedArray.swift */; };
 		DC1ADA4E1DBD2E2900201A32 /* ColorSliderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1ADA4D1DBD2E2900201A32 /* ColorSliderController.swift */; };
-		DC3BED3F1DC9155B002E7AD8 /* ColorWheelShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC3BED3D1DC9155B002E7AD8 /* ColorWheelShader.fsh */; };
-		DC3BED401DC9155B002E7AD8 /* ColorWheelShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC3BED3E1DC9155B002E7AD8 /* ColorWheelShader.vsh */; };
 		DC520FF21EA9C195008A9D35 /* BilinearGradientController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC520FF11EA9C195008A9D35 /* BilinearGradientController.swift */; };
 		DC520FF81EA9C268008A9D35 /* ColorTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC520FF71EA9C268008A9D35 /* ColorTabViewController.swift */; };
 		DC520FFA1EA9C28B008A9D35 /* ColorSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC520FF91EA9C28B008A9D35 /* ColorSplitViewController.swift */; };
 		DC520FFC1EA9C5A2008A9D35 /* ColorAnchors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC520FFB1EA9C5A2008A9D35 /* ColorAnchors.swift */; };
-		DC6E8B051DCBC36400620B7C /* CheckeredBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B041DCBC36400620B7C /* CheckeredBackground.png */; };
+		DC6890BF1EB8CB330046456F /* CheckeredBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DC6890BE1EB8CB330046456F /* CheckeredBackground.png */; };
+		DC6890C21EB8CB530046456F /* ColorWheelShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6890C01EB8CB530046456F /* ColorWheelShader.fsh */; };
+		DC6890C31EB8CB530046456F /* ColorWheelShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6890C11EB8CB530046456F /* ColorWheelShader.vsh */; };
 		DC6E8B201DCBCC7300620B7C /* CheckerShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B1E1DCBCC7300620B7C /* CheckerShader.fsh */; };
 		DC6E8B211DCBCC7300620B7C /* CheckerShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B1F1DCBCC7300620B7C /* CheckerShader.vsh */; };
 		DC7D14871EA6970C00118E46 /* BilinearGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7D14861EA6970C00118E46 /* BilinearGradientView.swift */; };
@@ -88,13 +88,13 @@
 		DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowResizeController.swift; sourceTree = "<group>"; };
 		DC17C7361EA5B0F500822E54 /* SortedArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedArray.swift; sourceTree = "<group>"; };
 		DC1ADA4D1DBD2E2900201A32 /* ColorSliderController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSliderController.swift; sourceTree = "<group>"; };
-		DC3BED3D1DC9155B002E7AD8 /* ColorWheelShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ColorWheelShader.fsh; path = ../../NoiseGenerator/NoiseGenerator/ColorWheelShader.fsh; sourceTree = "<group>"; };
-		DC3BED3E1DC9155B002E7AD8 /* ColorWheelShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = ColorWheelShader.vsh; path = ../../NoiseGenerator/NoiseGenerator/ColorWheelShader.vsh; sourceTree = "<group>"; };
 		DC520FF11EA9C195008A9D35 /* BilinearGradientController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BilinearGradientController.swift; sourceTree = "<group>"; };
 		DC520FF71EA9C268008A9D35 /* ColorTabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTabViewController.swift; sourceTree = "<group>"; };
 		DC520FF91EA9C28B008A9D35 /* ColorSplitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSplitViewController.swift; sourceTree = "<group>"; };
 		DC520FFB1EA9C5A2008A9D35 /* ColorAnchors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorAnchors.swift; sourceTree = "<group>"; };
-		DC6E8B041DCBC36400620B7C /* CheckeredBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CheckeredBackground.png; path = "../../../Xcode PNGs/Noise Generator/CheckeredBackground.png"; sourceTree = "<group>"; };
+		DC6890BE1EB8CB330046456F /* CheckeredBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CheckeredBackground.png; sourceTree = "<group>"; };
+		DC6890C01EB8CB530046456F /* ColorWheelShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorWheelShader.fsh; sourceTree = "<group>"; };
+		DC6890C11EB8CB530046456F /* ColorWheelShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorWheelShader.vsh; sourceTree = "<group>"; };
 		DC6E8B1E1DCBCC7300620B7C /* CheckerShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CheckerShader.fsh; sourceTree = "<group>"; };
 		DC6E8B1F1DCBCC7300620B7C /* CheckerShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CheckerShader.vsh; sourceTree = "<group>"; };
 		DC7D14861EA6970C00118E46 /* BilinearGradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BilinearGradientView.swift; sourceTree = "<group>"; };
@@ -150,8 +150,8 @@
 				DC6E8B1E1DCBCC7300620B7C /* CheckerShader.fsh */,
 				DC130ED11D8DC6CD007304AF /* ColorShader.vsh */,
 				DC130ED31D8DC6D8007304AF /* ColorShader.fsh */,
-				DC3BED3E1DC9155B002E7AD8 /* ColorWheelShader.vsh */,
-				DC3BED3D1DC9155B002E7AD8 /* ColorWheelShader.fsh */,
+				DC6890C01EB8CB530046456F /* ColorWheelShader.fsh */,
+				DC6890C11EB8CB530046456F /* ColorWheelShader.vsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -205,9 +205,9 @@
 			isa = PBXGroup;
 			children = (
 				DCEA99E41D8CFD040019964F /* Atlases.xml */,
-				DC6E8B041DCBC36400620B7C /* CheckeredBackground.png */,
 				DC9FFD681EA930020058493C /* LowBrightnessIcon.png */,
 				DC9FFD671EA930020058493C /* HighBrightnessIcon.png */,
+				DC6890BE1EB8CB330046456F /* CheckeredBackground.png */,
 				DCD0ED641DCFD92400064BD1 /* OutlinedCircle.png */,
 				DCEA99E61D8CFD0A0019964F /* WhiteTile.png */,
 				DC130ECC1D8DBE65007304AF /* WhiteCircle.pdf */,
@@ -362,9 +362,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC3BED3F1DC9155B002E7AD8 /* ColorWheelShader.fsh in Resources */,
+				DC6890C31EB8CB530046456F /* ColorWheelShader.vsh in Resources */,
 				DC130ECD1D8DBE65007304AF /* WhiteCircle.pdf in Resources */,
-				DC3BED401DC9155B002E7AD8 /* ColorWheelShader.vsh in Resources */,
 				DC6E8B201DCBCC7300620B7C /* CheckerShader.fsh in Resources */,
 				DCEA99901D8CC9F90019964F /* Assets.xcassets in Resources */,
 				DCEA99E71D8CFD0A0019964F /* WhiteTile.png in Resources */,
@@ -374,11 +373,12 @@
 				DCEA99E51D8CFD040019964F /* Atlases.xml in Resources */,
 				DCD0ED651DCFD92400064BD1 /* OutlinedCircle.png in Resources */,
 				DC9FFD691EA930020058493C /* HighBrightnessIcon.png in Resources */,
-				DC6E8B051DCBC36400620B7C /* CheckeredBackground.png in Resources */,
 				DCEA99E21D8CFC380019964F /* BasicShader.fsh in Resources */,
 				DCEA99E31D8CFC380019964F /* BasicShader.vsh in Resources */,
 				DC9FFD6A1EA930020058493C /* LowBrightnessIcon.png in Resources */,
 				DC130ED41D8DC6D8007304AF /* ColorShader.fsh in Resources */,
+				DC6890C21EB8CB530046456F /* ColorWheelShader.fsh in Resources */,
+				DC6890BF1EB8CB330046456F /* CheckeredBackground.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

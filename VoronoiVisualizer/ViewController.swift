@@ -43,6 +43,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     @IBOutlet weak var heightTextField: NSTextField!
     @IBOutlet weak var edgePopUpButton: NSPopUpButton!
     @IBOutlet weak var pointsCheckbox: NSButton!
+    @IBOutlet weak var edgeThicknessTextBox: NSTextField!
     
     var previousText:[TextFieldTag:String] = [:]
     var bufferSize:CGSize {
@@ -476,6 +477,20 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
         self.presentViewControllerAsModalWindow(controller)
     }
     
+    @IBAction func edgeTextBoxChanged(_ sender: Any) {
+        guard self.edgeThicknessTextBox.stringValue.matchesRegex("\\d+(\\.\\d+)?") else {
+            self.edgeThicknessTextBox.stringValue = "\(self.voronoiView.edgeThickness)"
+            return
+        }
+        let value = self.edgeThicknessTextBox.stringValue.getCGFloatValue()
+        guard value > 0.0 else {
+            self.edgeThicknessTextBox.stringValue = "\(self.voronoiView.edgeThickness)"
+            return
+        }
+        self.voronoiView.edgeThickness = value
+        self.voronoiView.calculate()
+        self.voronoiView.display()
+    }
     
     @IBAction func tiledCheckboxChanged(_ sender: NSButton) {
         self.voronoiView.isTiled = sender.integerValue == 0 ? false : true

@@ -693,11 +693,11 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="VoronoiVisualizer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="632" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="724" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <openGLView useAuxiliaryDepthBufferStencil="NO" allowOffline="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BUP-6y-4iN" customClass="OmniGLView2d" customModule="CoronaGL">
-                                <rect key="frame" x="128" y="0.0" width="504" height="197"/>
+                                <rect key="frame" x="128" y="0.0" width="596" height="197"/>
                             </openGLView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="idl-iW-VVL">
                                 <rect key="frame" x="16" y="228" width="107" height="32"/>
@@ -891,6 +891,28 @@
                                     <action selector="edgePopUpButtonChanged:" target="XfG-lQ-9wD" id="pqP-3n-qxU"/>
                                 </connections>
                             </popUpButton>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ue-pC-zPH">
+                                <rect key="frame" x="578" y="237" width="104" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Edge Thickness:" id="I0g-63-fMf">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TeA-kZ-Qdm">
+                                <rect key="frame" x="580" y="204" width="32" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="32" id="lYS-xW-nca"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="1" drawsBackground="YES" id="qlb-rb-yHJ">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <connections>
+                                        <action selector="edgeTextBoxChanged:" target="XfG-lQ-9wD" id="n8V-VY-1kr"/>
+                                    </connections>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="BUP-6y-4iN" firstAttribute="leading" secondItem="BeL-vm-37U" secondAttribute="trailing" id="4Tn-tK-yTL"/>
@@ -916,7 +938,10 @@
                             <constraint firstItem="nDE-Oe-raX" firstAttribute="centerX" secondItem="GTP-Wi-mAe" secondAttribute="centerX" id="cKw-lV-oLv"/>
                             <constraint firstAttribute="bottom" secondItem="BeL-vm-37U" secondAttribute="bottom" id="ceu-dG-HdJ"/>
                             <constraint firstItem="Qev-w9-PV7" firstAttribute="top" secondItem="TkH-y9-Y5s" secondAttribute="bottom" constant="10" id="eNM-ha-hg9"/>
+                            <constraint firstItem="2ue-pC-zPH" firstAttribute="leading" secondItem="eP0-th-tDX" secondAttribute="trailing" constant="8" id="fty-4c-BQ6"/>
                             <constraint firstItem="JNv-Im-3ai" firstAttribute="centerY" secondItem="tpO-oD-02Z" secondAttribute="centerY" id="gD5-Ol-V5u"/>
+                            <constraint firstItem="TeA-kZ-Qdm" firstAttribute="centerY" secondItem="Kfu-lb-3O6" secondAttribute="centerY" id="h3Y-j2-u26"/>
+                            <constraint firstItem="2ue-pC-zPH" firstAttribute="centerY" secondItem="eP0-th-tDX" secondAttribute="centerY" id="hKR-A6-1cA"/>
                             <constraint firstItem="GTP-Wi-mAe" firstAttribute="centerY" secondItem="nuf-fQ-nv8" secondAttribute="centerY" id="hV7-YM-RUW"/>
                             <constraint firstItem="FO0-Ml-WTW" firstAttribute="centerY" secondItem="nDE-Oe-raX" secondAttribute="centerY" id="hVQ-la-69d"/>
                             <constraint firstItem="idl-iW-VVL" firstAttribute="centerX" secondItem="TkH-y9-Y5s" secondAttribute="centerX" id="kf0-5U-tlD"/>
@@ -927,6 +952,7 @@
                             <constraint firstItem="GTP-Wi-mAe" firstAttribute="leading" secondItem="f1C-OD-SEg" secondAttribute="trailing" constant="8" id="nRV-Vx-dZT"/>
                             <constraint firstItem="Gq4-Se-jgH" firstAttribute="top" secondItem="Kjh-CX-zIA" secondAttribute="bottom" constant="10" id="pOH-to-wbN"/>
                             <constraint firstItem="tpO-oD-02Z" firstAttribute="centerX" secondItem="nuf-fQ-nv8" secondAttribute="centerX" id="pnp-PT-Pj4"/>
+                            <constraint firstItem="TeA-kZ-Qdm" firstAttribute="leading" secondItem="2ue-pC-zPH" secondAttribute="leading" id="sCw-ME-3Nq"/>
                             <constraint firstItem="tpO-oD-02Z" firstAttribute="leading" secondItem="nDE-Oe-raX" secondAttribute="trailing" constant="8" id="tM9-KI-o0y"/>
                             <constraint firstItem="idl-iW-VVL" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="22" id="tcD-7Z-c9G"/>
                             <constraint firstItem="QSa-45-30b" firstAttribute="leading" secondItem="nuf-fQ-nv8" secondAttribute="trailing" constant="7" id="tko-fL-fiB"/>
@@ -939,6 +965,7 @@
                     <connections>
                         <outlet property="columnTextField" destination="nuf-fQ-nv8" id="R3s-Ve-sYc"/>
                         <outlet property="edgePopUpButton" destination="QSa-45-30b" id="X0J-nj-W1C"/>
+                        <outlet property="edgeThicknessTextBox" destination="TeA-kZ-Qdm" id="uWU-zK-uHh"/>
                         <outlet property="glView" destination="BUP-6y-4iN" id="27p-0i-b8K"/>
                         <outlet property="heightTextField" destination="tpO-oD-02Z" id="bg2-D1-qkE"/>
                         <outlet property="pointsCheckbox" destination="JNv-Im-3ai" id="J6A-pb-Flg"/>
@@ -949,7 +976,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="151" y="655"/>
+            <point key="canvasLocation" x="197" y="655"/>
         </scene>
         <!--Discrete-->
         <scene sceneID="Zha-WR-wnU">

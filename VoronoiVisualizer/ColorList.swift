@@ -118,7 +118,7 @@ class ColorList: NSObject {
         return true
     }
     
-    func setCurrent(color:NSColor) -> Bool {
+    @discardableResult func setCurrent(color:NSColor) -> Bool {
         if let index = self.selectedViewIndex {
             self.views[index].color = color
             return true

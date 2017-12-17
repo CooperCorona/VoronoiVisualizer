@@ -171,7 +171,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     
     override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        switch segue.identifier {
+        switch segue.identifier?.rawValue {
         case "edgeColorSegue"?:
             guard let destination = segue.destinationController as? ColorChooserController else {
                 break
@@ -205,7 +205,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     }
     
     func parsePoints() throws -> [CGPoint] {
-        let lines = self.split(string: self.textView.string!).map() { $0.trimmingCharacters(in: CharacterSet.whitespaces) }
+        let lines = self.split(string: self.textView.string).map() { $0.trimmingCharacters(in: CharacterSet.whitespaces) }
         //This regex matches strings of the form (Number, Number)
         //where that is the only text in the string.
         guard let regex = NSRegularExpression(regex: "^\\([0-9]+\\.*[0-9]*,\\s[0-9]+\\.*[0-9]*\\)$") else {
@@ -256,16 +256,14 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     
     func displayAlert(text:String) {
         let alert = NSAlert()
-        alert.alertStyle = NSAlertStyle.critical
+        alert.alertStyle = NSAlert.Style.critical
         alert.messageText = text
         alert.addButton(withTitle: "Ok")
         alert.runModal()
     }
     
     func highlight(line:Int) {
-        guard let string = self.textView.string else {
-            return
-        }
+        let string = self.textView.string
         var newlineCount = 0
         var newlineStart = 0
         var newlineEnd = string.characterCount
@@ -400,7 +398,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     }
     
     @IBAction func colorButtonPressed(_ sender: Any) {
-        let colorController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorController") as! ColorSplitViewController
+        let colorController = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "colorController")) as! ColorSplitViewController
         colorController.coloringScheme = self.voronoiView.coloringScheme
         if let colorTab = colorController.childViewControllers.find({ $0 is ColorTabViewController }) as? ColorTabViewController {
             let dismissHandler:(VoronoiViewColoringScheme) -> Void = { [unowned self] in
@@ -447,12 +445,12 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     }
  
     
-    func exportButtonPressed(notification:Notification) {
+    @objc func exportButtonPressed(notification:Notification) {
         let panel = NSSavePanel()
         panel.canSelectHiddenExtension = true
         panel.allowedFileTypes = ["png"]
         switch panel.runModal() {
-        case NSModalResponseOK:
+        case NSApplication.ModalResponse.OK:
             guard let url = panel.url else {
                 return
             }
@@ -461,7 +459,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
             let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil)!
             let bitmap = NSBitmapImageRep(cgImage: cgImage)
             bitmap.size = image.size
-            let data = bitmap.representation(using: NSBitmapImageFileType.PNG, properties: [:])
+            let data = bitmap.representation(using: NSBitmapImageRep.FileType.png, properties: [:])
             do {
                 try data?.write(to: url, options: .atomic)
             } catch {
@@ -473,7 +471,7 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     }
     
     func gradientItemClicked(notification:Notification) {
-        let controller = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "colorController") as! NSViewController
+        let controller = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "colorController")) as! NSViewController
         self.presentViewControllerAsModalWindow(controller)
     }
     

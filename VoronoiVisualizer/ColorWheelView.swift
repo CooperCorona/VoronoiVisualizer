@@ -34,7 +34,7 @@ open class ColorWheelView: OmniGLView2d {
         }
         self.clearColor = SCVector4()
         let opaque:[GLint] = [0]
-        self.openGLContext?.setValues(opaque, for: NSOpenGLContextParameter.surfaceOpacity)
+        self.openGLContext?.setValues(opaque, for: NSOpenGLContext.Parameter.surfaceOpacity)
     }
     
     required public init?(coder: NSCoder) {
@@ -46,7 +46,7 @@ open class ColorWheelView: OmniGLView2d {
         }
         self.clearColor = SCVector4()
         let opaque:[GLint] = [0]
-        self.openGLContext?.setValues(opaque, for: NSOpenGLContextParameter.surfaceOpacity)
+        self.openGLContext?.setValues(opaque, for: NSOpenGLContext.Parameter.surfaceOpacity)
     }
     
     open override func reshape() {
@@ -202,7 +202,7 @@ open class ColorWheelViewWrapper: NSView {
         guard saturation >= 0.0 && saturation <= 1.0 else {
             return nil
         }
-        let hue = AngleDelta.makePositive(angle: center.angleTo(point)) / CGFloat(2.0 * M_PI)
+        let hue = AngleDelta.makePositive(angle: center.angleTo(point)) / (2.0 * CGFloat.pi)
         return [hue, saturation, self.brightness, self.wheelAlpha]
     }
     

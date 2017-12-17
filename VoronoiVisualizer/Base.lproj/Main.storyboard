@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12120"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
@@ -715,7 +715,7 @@
                                     <rect key="frame" x="1" y="1" width="126" height="196"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="Qev-w9-PV7">
+                                        <textView importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="Qev-w9-PV7">
                                             <rect key="frame" x="0.0" y="0.0" width="126" height="196"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -891,7 +891,7 @@
                                     <action selector="edgePopUpButtonChanged:" target="XfG-lQ-9wD" id="pqP-3n-qxU"/>
                                 </connections>
                             </popUpButton>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ue-pC-zPH">
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2ue-pC-zPH">
                                 <rect key="frame" x="578" y="237" width="104" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Edge Thickness:" id="I0g-63-fMf">
                                     <font key="font" metaFont="system"/>
@@ -899,7 +899,7 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TeA-kZ-Qdm">
+                            <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TeA-kZ-Qdm">
                                 <rect key="frame" x="580" y="204" width="32" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="32" id="lYS-xW-nca"/>
@@ -1050,8 +1050,12 @@
                     <splitView key="splitView" dividerStyle="thin" id="oIN-GA-AfJ">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <outlet property="delegate" destination="oDw-9B-TtB" id="Ixd-Zj-k2d"/>
+                        </connections>
                     </splitView>
                     <connections>
+                        <outlet property="splitView" destination="oIN-GA-AfJ" id="2Gi-H5-wuE"/>
                         <segue destination="bux-qt-c5k" kind="relationship" relationship="splitItems" id="nd5-yL-UmA"/>
                         <segue destination="T5a-bW-Yvx" kind="relationship" relationship="splitItems" id="2Tb-fC-Lqs"/>
                     </connections>
@@ -1063,7 +1067,7 @@
         <!--Color Tab View Controller-->
         <scene sceneID="mvb-sK-tdE">
             <objects>
-                <tabViewController selectedTabViewItemIndex="0" id="bux-qt-c5k" customClass="ColorTabViewController" customModule="VoronoiVisualizer" customModuleProvider="target" sceneMemberID="viewController">
+                <tabViewController selectedTabViewItemIndex="1" id="bux-qt-c5k" customClass="ColorTabViewController" customModule="VoronoiVisualizer" customModuleProvider="target" sceneMemberID="viewController">
                     <tabViewItems>
                         <tabViewItem id="Plp-1q-BiI"/>
                         <tabViewItem id="UGd-uO-YP9"/>
@@ -1073,8 +1077,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <font key="font" metaFont="message"/>
                         <tabViewItems/>
+                        <connections>
+                            <outlet property="delegate" destination="bux-qt-c5k" id="7sA-FC-8Zi"/>
+                        </connections>
                     </tabView>
                     <connections>
+                        <outlet property="tabView" destination="o50-26-rhl" id="kbY-Io-gao"/>
                         <segue destination="Zh3-rT-Lot" kind="relationship" relationship="tabItems" id="bcN-k5-b4x"/>
                         <segue destination="uh5-W0-xy1" kind="relationship" relationship="tabItems" id="zT7-o2-bhN"/>
                     </connections>
@@ -1201,7 +1209,7 @@
                             <stackView distribution="fill" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W4S-xX-BOg">
                                 <rect key="frame" x="156" y="33" width="96" height="112"/>
                                 <subviews>
-                                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jyq-f4-KAy">
+                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jyq-f4-KAy">
                                         <rect key="frame" x="0.0" y="90" width="96" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="96" id="A5K-Ln-rtd"/>
@@ -1215,7 +1223,7 @@
                                             </connections>
                                         </textFieldCell>
                                     </textField>
-                                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b39-Iy-cZs">
+                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="b39-Iy-cZs">
                                         <rect key="frame" x="0.0" y="60" width="96" height="22"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="255" drawsBackground="YES" id="vao-Lc-BGw">
                                             <font key="font" metaFont="system"/>
@@ -1226,7 +1234,7 @@
                                             </connections>
                                         </textFieldCell>
                                     </textField>
-                                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yul-fP-UVW">
+                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Yul-fP-UVW">
                                         <rect key="frame" x="0.0" y="30" width="96" height="22"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="255" drawsBackground="YES" id="Y09-Ih-wyE">
                                             <font key="font" metaFont="system"/>
@@ -1237,7 +1245,7 @@
                                             </connections>
                                         </textFieldCell>
                                     </textField>
-                                    <textField verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Bq-0u-N8o">
+                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1Bq-0u-N8o">
                                         <rect key="frame" x="0.0" y="0.0" width="96" height="22"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="255" drawsBackground="YES" id="1AB-nH-J4E">
                                             <font key="font" metaFont="system"/>

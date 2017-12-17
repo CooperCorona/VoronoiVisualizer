@@ -22,7 +22,7 @@ class BilinearGradientView: NSView {
     }
 
     override func draw(_ dirtyRect: NSRect) {
-        guard let context = NSGraphicsContext.current()?.cgContext else {
+        guard let context = NSGraphicsContext.current?.cgContext else {
             return
         }
         let fGranularity = CGFloat(self.granularity)

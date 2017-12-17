@@ -35,8 +35,6 @@ class ColorSliderController: NSViewController, NSTextFieldDelegate, ColorListDel
         } else {
             self.plusButton.isHidden  = true
             self.minusButton.isHidden = true
-            let comps = self.initialColor.getComponents()
-//            self.colorChanged(red: comps[0], green: comps[1], blue: comps[2], alpha: comps[3])
         }
     }
     

@@ -46,7 +46,7 @@ class GLSVoronoiEdgeSprite: GLSNode {
     init(cell:VoronoiCell, color:SCVector3, thickness:CGFloat, mode:EdgeRenderingMode = .edges) {
         let vertices = cell.makeVertexLoop()
         var edgeVertices:[Vertex] = []
-        let rotate90 = SCMatrix4(rotation2D: CGFloat(M_PI_2))
+        let rotate90 = SCMatrix4(rotation2D: CGFloat.pi / 2.0)
         for (i, vertex) in vertices.enumerated() {
             let next:CGPoint
             if i == vertices.count - 1 {

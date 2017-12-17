@@ -22,7 +22,6 @@ class ColorTabViewController: NSTabViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tabView.delegate = self
     }
     
     override func viewWillAppear() {

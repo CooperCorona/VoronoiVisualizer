@@ -61,7 +61,7 @@ class BilinearGradientController: NSViewController, ColorChooserDelegate, Colori
         //before the outlets have been loaded, so it's
         //possible for the knob view to be nil at this point.
         if let knobView = self.knobView {
-            self.knobView.addSubview(knobImage)
+            knobView.addSubview(knobImage)
         }
         return knobImage
     }

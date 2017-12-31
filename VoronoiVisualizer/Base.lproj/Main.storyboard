@@ -126,6 +126,38 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Diagram" id="82V-o1-Nzo">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Diagram" id="Ifd-BN-nRb">
+                                    <items>
+                                        <menuItem title="Image Mask" id="vbW-RY-W3Y">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Image Mask" id="jL8-kR-UYQ">
+                                                <items>
+                                                    <menuItem title="Image" id="e7q-mz-e9a">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="imageMenuItemClicked:" target="Voe-Tx-rLC" id="7EG-mJ-pTh"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Mask" id="O2G-EQ-fvV">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="maskMenuItemClicked:" target="Voe-Tx-rLC" id="bhU-hX-99K"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="No Image" id="Imx-9r-pzT">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="noImageMenuItemClicked:" target="Voe-Tx-rLC" id="LMv-eN-gRb"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Edit" id="5QF-Oa-p0T">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Edit" id="W48-6f-4Dl">

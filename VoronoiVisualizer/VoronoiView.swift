@@ -66,7 +66,7 @@ func ==(lhs:VoronoiCellSprite, rhs:VoronoiCellSprite) -> Bool {
 }
 
 class VoronoiView: NSObject {
-
+    
     weak var glView:OmniGLView2d? = nil
     var viewSize:CGSize { return self.glView?.frame.size ?? CGSize(square: 1.0) }
     var voronoiBuffer = GLSFrameBuffer(size: CGSize(square: 1.0))
@@ -77,7 +77,7 @@ class VoronoiView: NSObject {
     private(set) var diagram:VoronoiDiagram? = nil
     var size = CGSize(square: 256.0) {
         didSet {
-            
+            self.imageMask.set(size: self.size)
         }
     }
     var points:[CGPoint] = []
@@ -119,6 +119,7 @@ class VoronoiView: NSObject {
         }
     }
     var coloringScheme:VoronoiViewColoringScheme = DiscreteColoringScheme(colors: SCVector4.rainbowColors)
+    let imageMask = VoronoiImageMask()
     
     init(glView:OmniGLView2d?) {
         self.glView = glView
@@ -284,10 +285,30 @@ class VoronoiView: NSObject {
         self.tileBuffer.renderToTexture()
         OmniGLView2d.setViewport(to: self.voronoiBuffer.contentSize)
         self.voronoiBuffer.renderToTexture()
+        self.renderImageMask(to: self.voronoiBuffer)
         if let glView = self.glView {
             glView.openGLContext?.makeCurrentContext()
             OmniGLView2d.setViewport(to: glView.bounds.size)
         }
+    }
+    
+    private func renderImageMask(to buffer:GLSFrameBuffer) {
+        buffer.framebufferStack?.pushGLSFramebuffer(buffer: buffer)
+        switch self.imageMask.imageMask {
+        case .none:
+            break
+        case .image:
+            glBlendFunc(GLenum(GL_DST_COLOR), GLenum(GL_ZERO))
+            self.imageMask.sprite.render()
+            glBlendFunc(GLenum(GL_SRC_ALPHA), GLenum(GL_ONE_MINUS_SRC_ALPHA))
+            break
+        case .mask:
+            glBlendFuncSeparate(GLenum(GL_ZERO), GLenum(GL_ONE), GLenum(GL_ONE), GLenum(GL_ZERO))
+            self.imageMask.sprite.render()
+            glBlendFunc(GLenum(GL_SRC_ALPHA), GLenum(GL_ONE_MINUS_SRC_ALPHA))
+            break
+        }
+        buffer.framebufferStack?.popFramebuffer()
     }
     
 }

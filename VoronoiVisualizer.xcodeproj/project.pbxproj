@@ -24,6 +24,7 @@
 		DC6890BF1EB8CB330046456F /* CheckeredBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = DC6890BE1EB8CB330046456F /* CheckeredBackground.png */; };
 		DC6890C21EB8CB530046456F /* ColorWheelShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6890C01EB8CB530046456F /* ColorWheelShader.fsh */; };
 		DC6890C31EB8CB530046456F /* ColorWheelShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6890C11EB8CB530046456F /* ColorWheelShader.vsh */; };
+		DC6A6BA41FF941D900B42655 /* VoronoiImageMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6A6BA31FF941D900B42655 /* VoronoiImageMask.swift */; };
 		DC6E8B201DCBCC7300620B7C /* CheckerShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B1E1DCBCC7300620B7C /* CheckerShader.fsh */; };
 		DC6E8B211DCBCC7300620B7C /* CheckerShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = DC6E8B1F1DCBCC7300620B7C /* CheckerShader.vsh */; };
 		DC7D14871EA6970C00118E46 /* BilinearGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7D14861EA6970C00118E46 /* BilinearGradientView.swift */; };
@@ -109,6 +110,7 @@
 		DC6890BE1EB8CB330046456F /* CheckeredBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CheckeredBackground.png; sourceTree = "<group>"; };
 		DC6890C01EB8CB530046456F /* ColorWheelShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorWheelShader.fsh; sourceTree = "<group>"; };
 		DC6890C11EB8CB530046456F /* ColorWheelShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorWheelShader.vsh; sourceTree = "<group>"; };
+		DC6A6BA31FF941D900B42655 /* VoronoiImageMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoronoiImageMask.swift; sourceTree = "<group>"; };
 		DC6E8B1E1DCBCC7300620B7C /* CheckerShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CheckerShader.fsh; sourceTree = "<group>"; };
 		DC6E8B1F1DCBCC7300620B7C /* CheckerShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CheckerShader.vsh; sourceTree = "<group>"; };
 		DC7D14861EA6970C00118E46 /* BilinearGradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BilinearGradientView.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				DC9FFD611EA8FCE40058493C /* LightSourceGradient.swift */,
 				DC17C7361EA5B0F500822E54 /* SortedArray.swift */,
 				DCEA998D1D8CC9F90019964F /* ViewController.swift */,
+				DC6A6BA31FF941D900B42655 /* VoronoiImageMask.swift */,
 				DCD0ED691DCFF94500064BD1 /* VoronoiView.swift */,
 				DCB1D3211EAC4770002BAFF1 /* VoronoiViewColoringScheme.swift */,
 				DC130ED91D8DE2A9007304AF /* WindowResizeController.swift */,
@@ -436,6 +439,7 @@
 				DC520FFC1EA9C5A2008A9D35 /* ColorAnchors.swift in Sources */,
 				DCD0ED6A1DCFF94500064BD1 /* VoronoiView.swift in Sources */,
 				DC9FFD6C1EA945620058493C /* ColorChooserController.swift in Sources */,
+				DC6A6BA41FF941D900B42655 /* VoronoiImageMask.swift in Sources */,
 				DC1ADA4E1DBD2E2900201A32 /* ColorSliderController.swift in Sources */,
 				DC520FFA1EA9C28B008A9D35 /* ColorSplitViewController.swift in Sources */,
 				DCEA998C1D8CC9F90019964F /* AppDelegate.swift in Sources */,

@@ -12,6 +12,7 @@ import CoronaConvenience
 import CoronaStructures
 import CoronaGL
 import Voronoi
+import GLKit
 
 enum ParsePointError: Error {
     case Failed
@@ -92,6 +93,9 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
     override func viewWillAppear() {
         super.viewWillAppear()
         NotificationCenter.default.addObserver(self, selector: #selector(exportButtonPressed), name: Notification.Name(rawValue: AppDelegate.ExportImageNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(imageMenuItemClicked(notification:)), name: Notification.Name(rawValue: AppDelegate.ImageNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(maskMenuItemClicked(notification:)), name: Notification.Name(rawValue: AppDelegate.MaskNotification), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(noImageMenuItemClicked(notification:)), name: Notification.Name(rawValue: AppDelegate.NoImageNotification), object: nil)
     }
     
     override var representedObject: Any? {
@@ -467,6 +471,44 @@ class ViewController: NSViewController, ResizableViewController, NSTextFieldDele
             }
         default:
             break
+        }
+    }
+    
+    @objc func imageMenuItemClicked(notification:Notification) {
+        guard let texture = self.openImageLoadTexture() else {
+            return
+        }
+        self.voronoiView.imageMask.imageMask = .image(texture)
+        self.voronoiView.display()
+    }
+    
+    @objc func maskMenuItemClicked(notification:Notification) {
+        guard let texture = self.openImageLoadTexture() else {
+            return
+        }
+        self.voronoiView.imageMask.imageMask = .mask(texture)
+        self.voronoiView.display()
+    }
+    
+    @objc func noImageMenuItemClicked(notification:Notification) {
+        self.voronoiView.imageMask.imageMask = .none
+        self.voronoiView.display()
+    }
+    
+    private func openImageLoadTexture() -> CCTexture? {
+        let panel = NSOpenPanel()
+        panel.allowedFileTypes = ["png"]
+        switch panel.runModal() {
+        case NSApplication.ModalResponse.OK:
+            guard let url = panel.url else {
+                return nil
+            }
+            guard let glTexture = try? GLKTextureLoader.texture(withContentsOf: url, options: [GLKTextureLoaderOriginBottomLeft:true]) else {
+                return nil
+            }
+            return CCTexture(name: glTexture.name)
+        default:
+            return nil
         }
     }
     

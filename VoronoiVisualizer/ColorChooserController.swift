@@ -61,6 +61,7 @@ class ColorChooserController: NSViewController, ColorWheelViewDelegate {
         self.blueTextField.integerValue = Int(comps[2] * 255.0)
         self.alphaTextField.integerValue = Int(comps[3] * 255.0)
         self.brightnessSlider.doubleValue = Double(self.colorWheel.brightness)
+        self.color = color
         self.colorWheel.display()
     }
     

@@ -9,3 +9,11 @@ Generate random voronoi diagrams or input your own points to create a custom vor
 * Mono Mode Update: You can now choose any number and type of colors to color your Voronoi Diagram (Mono is now the only coloring scheme; others have been deprecated).
 
 ![](VoronoiDiagramImage.png)
+
+## Exporting
+[This script](https://gist.github.com/CooperCorona/ef7b9884439f98c2f6bc6c87aec9d46f) automatically manages dependencies and exports VoronoiVisualizer as a Mac application. This way, you can run it independent of Xcode.
+
+* Open Terminal
+* Navigate to the directory you want to place the repositories in
+* Run ```mkdir VoronoiVisualizer; cd VoronoiVisualizer; curl https://gist.githubusercontent.com/CooperCorona/ef7b9884439f98c2f6bc6c87aec9d46f/raw/f71d806a6f3e24854c27dff17fafb3210c145048/export.sh > export.sh; chmod 700 export.sh; ./export.sh```
+* Whenever you want to update and re-export the app, navigate to the directory and run ```./export.sh```

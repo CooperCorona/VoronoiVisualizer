@@ -34,6 +34,10 @@ class BilinearGradientController: NSViewController, ColorChooserDelegate, Colori
         self.gradientView.gradient = self.anchors.gradient
     }
     
+    override func viewDidAppear() {
+        super.viewDidAppear()
+    }
+    
     override func viewDidLayout() {
         super.viewDidLayout()
         //It's possible for the knobView to be nil
@@ -81,6 +85,8 @@ class BilinearGradientController: NSViewController, ColorChooserDelegate, Colori
             knob.removeFromSuperview()
         }
         self.anchors = anchors
+        self.gradientView.gradient = self.anchors.gradient
+        self.gradientView.display()
     }
     
     override func mouseDown(with event: NSEvent) {

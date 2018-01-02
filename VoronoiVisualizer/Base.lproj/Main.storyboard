@@ -1056,9 +1056,21 @@
                                     <action selector="doneButtonPressed:" target="Zh3-rT-Lot" id="bFq-KZ-CIF"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cfw-AO-eFY">
+                                <rect key="frame" x="14" y="13" width="125" height="32"/>
+                                <buttonCell key="cell" type="push" title="Make Uniform" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ddA-VO-5te">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="makeUniformButtonPressed:" target="Zh3-rT-Lot" id="w54-EI-AEn"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="cfw-AO-eFY" firstAttribute="leading" secondItem="KOP-qW-MhB" secondAttribute="leading" constant="20" id="4vK-Ls-jfM"/>
                             <constraint firstAttribute="bottom" secondItem="lyU-vQ-u4R" secondAttribute="bottom" constant="20" id="5WX-FX-kT7"/>
+                            <constraint firstAttribute="bottom" secondItem="cfw-AO-eFY" secondAttribute="bottom" constant="20" id="OUh-Pg-ESJ"/>
                             <constraint firstItem="lyU-vQ-u4R" firstAttribute="centerX" secondItem="KOP-qW-MhB" secondAttribute="centerX" id="jQy-5y-hW1"/>
                         </constraints>
                     </view>

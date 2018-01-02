@@ -87,4 +87,36 @@ class ColorSliderController: NSViewController, NSTextFieldDelegate, ColorListDel
         self.parent?.parent?.dismiss(self)
     }
     
+    @IBAction func makeUniformButtonPressed(_ sender: Any) {
+        guard let selectedColor = self.colorList.selectedColor else {
+            return
+        }
+        let comps = selectedColor.getComponents()
+        let n = 9
+        let delta:CGFloat = 4.0 / 256.0
+        var finalComps = [[CGFloat]](repeating: [0.0, 0.0, 0.0, 0.0], count: n)
+        for i in 0..<3 {
+            var minN = -4
+            var maxN = 4
+            if comps[i] + CGFloat(maxN) * delta > 1.0 {
+                let decrease = Int(ceil((CGFloat(maxN) * delta + comps[i] - 1.0) / delta))
+                maxN -= decrease
+                minN -= decrease
+            }
+            if comps[i] + CGFloat(minN) * delta < 0.0 {
+                let increase = Int(ceil((-CGFloat(minN) * delta - comps[i]) / delta))
+                minN += increase
+                maxN += increase
+            }
+            for j in minN...maxN {
+                let compIndex = j - minN
+                finalComps[compIndex][i] = comps[i] + CGFloat(j) * delta
+            }
+        }
+        //Don't modify the alpha. The user's intent is most likely
+        //to just use the given alpha.
+        let finalColors = finalComps.map() { NSColor(red: $0[0], green: $0[1], blue: $0[2], alpha: comps[3]) }
+        self.colorList.set(colors: finalColors)
+        self.colorList.layout(viewWidth: self.view.frame.width)
+    }
 }

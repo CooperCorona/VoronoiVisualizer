@@ -15,5 +15,5 @@ Generate random voronoi diagrams or input your own points to create a custom vor
 
 * Open Terminal
 * Navigate to the directory you want to place the repositories in
-* Run ```mkdir VoronoiVisualizer; cd VoronoiVisualizer; curl https://gist.githubusercontent.com/CooperCorona/ef7b9884439f98c2f6bc6c87aec9d46f/raw/f71d806a6f3e24854c27dff17fafb3210c145048/export.sh > exportVoronoi.sh; chmod 700 exportVoronoi.sh; ./exportVoronoi.sh```
-* Whenever you want to update and re-export the app, navigate to the directory and run ```./export.sh```
+* Run ```mkdir VoronoiVisualizer; cd VoronoiVisualizer; curl https://gist.githubusercontent.com/CooperCorona/ef7b9884439f98c2f6bc6c87aec9d46f/raw/f71d806a6f3e24854c27dff17fafb3210c145048/exportVoronoi.sh > exportVoronoi.sh; chmod 700 exportVoronoi.sh; ./exportVoronoi.sh```
+* Whenever you want to update and re-export the app, navigate to the directory and run ```./exportVoronoi.sh```

@@ -25,6 +25,7 @@ class BilinearGradientController: NSViewController, ColorChooserDelegate, Colori
     @IBOutlet weak var gradientView: BilinearGradientView!
     @IBOutlet weak var knobView: NSView!
     @IBOutlet weak var deleteButton: NSButton!
+    @IBOutlet weak var intensitySlider: NSSlider!
     
     weak var colorChooserController:ColorChooserController? = nil
     var dismissHandler:((VoronoiViewColoringScheme) -> Void)? = nil
@@ -78,6 +79,8 @@ class BilinearGradientController: NSViewController, ColorChooserDelegate, Colori
     
     func set(gradient:LightSourceGradient<SCVector4>) {
         let anchors = ColorAnchors(viewSize: CGSize(square: 1.0))
+        anchors.intensity = gradient.power
+        self.intensitySlider.doubleValue = self.sliderValue(from: gradient.power)
         for light in gradient.lights {
             anchors.add(point: light.point, color: light.value, view: self.makeKnob())
         }
@@ -136,4 +139,17 @@ class BilinearGradientController: NSViewController, ColorChooserDelegate, Colori
         self.parent?.parent?.dismiss(self)
     }
     
+    private func intensity(from sliderValue:Double) -> CGFloat {
+        return CGFloat(sliderValue) + 2.0
+    }
+    
+    private func sliderValue(from intensity:CGFloat) -> Double {
+        return Double(intensity) - 2.0
+    }
+    
+    @IBAction func intensitySliderChanged(_ sender: NSSlider) {
+        self.anchors.intensity = self.intensity(from: sender.doubleValue)
+        self.gradientView.gradient = self.anchors.gradient
+        self.gradientView.display()
+    }
 }

@@ -32,6 +32,19 @@ public struct LightSourceGradient<T: Interpolatable> {
 
     private(set) var lights:[LightSource<T>] = []
     public let zero:T
+    ///Determines the power of the distance term
+    ///used to weight the points. Higher powers means
+    ///the light sources are more *intense*. This means
+    ///the light sources contribute more fully to colors
+    ///near them, with more drastic changes as points get
+    ///closer to other light sources.
+    public var power:CGFloat = 2.0 {
+        didSet {
+            if self.power < 1.0 {
+                self.power = 1.0
+            }
+        }
+    }
     
     public init(zero:T) {
         self.zero = zero
@@ -48,8 +61,7 @@ public struct LightSourceGradient<T: Interpolatable> {
         if let atPoint = distances.find({ $0.distance == 0.0 }) {
             return atPoint.value
         }
-        let power:CGFloat = 2.0
-        let weights = distances.map() { 1.0 / pow($0.distance, power) }
+        let weights = distances.map() { 1.0 / pow($0.distance, self.power) }
         let totalWeight = weights.reduce(0.0) { $0 + $1 }
         let color = array(from: 0, to: distances.count).reduce(self.zero) { $0 + (weights[$1] / totalWeight) * distances[$1].value }
         return color

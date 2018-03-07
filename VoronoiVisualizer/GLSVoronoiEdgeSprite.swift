@@ -43,7 +43,7 @@ class GLSVoronoiEdgeSprite: GLSNode {
         }
     }
     
-    init(cell:VoronoiCell, color:SCVector3, thickness:CGFloat, mode:EdgeRenderingMode = .edges) {
+    init(cell:VoronoiCell, color:SCVector3, thickness:CGFloat, antiAliasFactor:CGFloat, mode:EdgeRenderingMode = .edges) {
         let vertices = cell.makeVertexLoop()
         var edgeVertices:[Vertex] = []
         let rotate90 = SCMatrix4(rotation2D: CGFloat.pi / 2.0)
@@ -70,10 +70,10 @@ class GLSVoronoiEdgeSprite: GLSNode {
                 }
             }
             let normal = rotate90 * (next - vertex).unit()
-            let tl = vertex + normal * thickness
-            let bl = vertex - normal * thickness
-            let tr = next + normal * thickness
-            let br = next - normal * thickness
+            let tl = (vertex + normal * thickness) * antiAliasFactor
+            let bl = (vertex - normal * thickness) * antiAliasFactor
+            let tr = (next + normal * thickness) * antiAliasFactor
+            let br = (next - normal * thickness) * antiAliasFactor
             var vs = [Vertex](repeating: Vertex(position: (0.0, 0.0), color: color.getGLTuple4()), count: 6)
             vs[0].position = tl.getGLTuple()
             vs[1].position = bl.getGLTuple()

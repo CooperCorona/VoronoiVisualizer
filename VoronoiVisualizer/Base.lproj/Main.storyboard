@@ -1173,6 +1173,34 @@
                                     <action selector="doneButtonPressed:" target="uh5-W0-xy1" id="dHK-Gz-Ji4"/>
                                 </connections>
                             </button>
+                            <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qAB-0B-cxP">
+                                <rect key="frame" x="129" y="278" width="192" height="17"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8d4-gn-A7i">
+                                        <rect key="frame" x="-2" y="0.0" width="96" height="17"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Intensity" id="vQj-g2-g7m">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5xF-YQ-fC3">
+                                        <rect key="frame" x="98" y="0.0" width="96" height="19"/>
+                                        <sliderCell key="cell" state="on" alignment="left" maxValue="1" tickMarkPosition="above" sliderType="linear" id="qi6-MI-cQt"/>
+                                        <connections>
+                                            <action selector="intensitySliderChanged:" target="uh5-W0-xy1" id="cvR-by-eTP"/>
+                                        </connections>
+                                    </slider>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
                         </subviews>
                         <constraints>
                             <constraint firstItem="Is4-f5-opN" firstAttribute="top" relation="greaterThanOrEqual" secondItem="q6C-92-bg9" secondAttribute="bottom" constant="8" id="4P1-rm-sRp"/>
@@ -1182,15 +1210,19 @@
                             <constraint firstItem="Is4-f5-opN" firstAttribute="centerX" secondItem="1Dh-u3-llc" secondAttribute="centerX" id="YBU-fc-9kk"/>
                             <constraint firstItem="dNz-rS-3tJ" firstAttribute="leading" secondItem="TV7-dA-2Ws" secondAttribute="leading" constant="-6" id="YeR-9L-FRB"/>
                             <constraint firstItem="q6C-92-bg9" firstAttribute="centerX" secondItem="dNz-rS-3tJ" secondAttribute="centerX" id="ads-xo-d5j"/>
+                            <constraint firstItem="dNz-rS-3tJ" firstAttribute="top" secondItem="qAB-0B-cxP" secondAttribute="bottom" constant="8" id="dfH-rx-j9z"/>
                             <constraint firstItem="q6C-92-bg9" firstAttribute="top" secondItem="dNz-rS-3tJ" secondAttribute="bottom" constant="8" id="hOe-a8-vnj"/>
                             <constraint firstItem="TV7-dA-2Ws" firstAttribute="centerX" secondItem="1Dh-u3-llc" secondAttribute="centerX" id="j6Q-BH-D2h"/>
                             <constraint firstItem="dNz-rS-3tJ" firstAttribute="bottom" secondItem="TV7-dA-2Ws" secondAttribute="bottom" constant="6" id="j6p-rV-a7J"/>
+                            <constraint firstItem="qAB-0B-cxP" firstAttribute="centerX" secondItem="dNz-rS-3tJ" secondAttribute="centerX" id="j7j-d3-936"/>
+                            <constraint firstItem="qAB-0B-cxP" firstAttribute="width" secondItem="TV7-dA-2Ws" secondAttribute="width" id="oq0-Sz-D2d"/>
                             <constraint firstItem="dNz-rS-3tJ" firstAttribute="trailing" secondItem="TV7-dA-2Ws" secondAttribute="trailing" constant="6" id="tr5-oE-7ek"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="deleteButton" destination="q6C-92-bg9" id="Y6r-am-Ob4"/>
                         <outlet property="gradientView" destination="TV7-dA-2Ws" id="oIe-ni-T5o"/>
+                        <outlet property="intensitySlider" destination="5xF-YQ-fC3" id="7x0-Lz-OUk"/>
                         <outlet property="knobView" destination="dNz-rS-3tJ" id="YJz-Xp-2dr"/>
                     </connections>
                 </viewController>

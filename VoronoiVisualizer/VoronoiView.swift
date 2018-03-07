@@ -118,6 +118,7 @@ class VoronoiView: NSObject {
             }
         }
     }
+    var antiAlias:Bool = true
     var coloringScheme:VoronoiViewColoringScheme = DiscreteColoringScheme(colors: SCVector4.rainbowColors)
     let imageMask = VoronoiImageMask()
     
@@ -159,11 +160,12 @@ class VoronoiView: NSObject {
     }
     
     private func calculate(diagram:VoronoiDiagram) {
+        let antiAliasFactor:CGFloat = (self.antiAlias ? 2.0 : 1.0)
         let _ = self.glView?.removeChild(self.voronoiBuffer)
         self.voronoiBuffer = GLSFrameBuffer(size: self.size)
         self.voronoiBuffer.position = self.viewSize.center
         self.voronoiBuffer.renderChildren = false
-        self.tileBuffer = GLSFrameBuffer(size: self.size)
+        self.tileBuffer = GLSFrameBuffer(size: self.size * antiAliasFactor)
         self.glView?.addChild(self.voronoiBuffer)
         while let bufferCount = self.glView?.buffers.count, bufferCount > 0 {
             let _ = self.glView?.removeBuffer(at: 0)
@@ -185,6 +187,8 @@ class VoronoiView: NSObject {
         self.cells = []
         for (i, cell) in cells.enumerated() {
             let s = GLSVoronoiSprite(cell: cell, boundaries: self.size)
+            s.scale = antiAliasFactor
+            s.position *= antiAliasFactor
             self.tileBuffer.addChild(s)
             self.cells.append(VoronoiCellSprite(cell: cell, sprite: s, hash: i))
             
@@ -192,15 +196,17 @@ class VoronoiView: NSObject {
             let vs = GLSSprite(position: cell.voronoiPoint, size: CGSize(square: size), texture: "Outlined Circle")
             self.pointContainer.addChild(vs)
             
-            let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector3.blackColor, thickness: self.edgeThickness, mode: self.edgeRenderingMode)
+            let es = GLSVoronoiEdgeSprite(cell: cell, color: SCVector3.blackColor, thickness: self.edgeThickness, antiAliasFactor: antiAliasFactor, mode: self.edgeRenderingMode)
+            es.scale = antiAliasFactor
+            es.position *= antiAliasFactor
             self.edgeContainer.addChild(es)
         }
         
         let tSprite = GLSSprite(size: self.size, texture: self.tileBuffer.ccTexture)
         tSprite.anchor = CGPoint.zero
         self.voronoiBuffer.addChild(tSprite)
-        self.voronoiBuffer.removeChild(self.edgeContainer)
-        self.voronoiBuffer.addChild(self.edgeContainer)
+        self.tileBuffer.removeChild(self.edgeContainer)
+        self.tileBuffer.addChild(self.edgeContainer)
         
         var dict:[UnsafeMutableRawPointer:VoronoiCellSprite] = [:]
         for cell in self.cells {

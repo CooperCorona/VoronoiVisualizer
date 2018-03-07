@@ -28,11 +28,13 @@ class ColorAnchors: NSObject {
     private var initialMousePosition:CGPoint? = nil
     var gradient:LightSourceGradient<SCVector4> {
         var gradient = LightSourceGradient(zero: SCVector4())
+        gradient.power = self.intensity
         for anchor in self.anchors {
             gradient.add(value: anchor.color, at: anchor.point / self.viewSize)
         }
         return gradient
     }
+    var intensity:CGFloat = 2.0
     var viewSize:CGSize {
         didSet {
             self.anchors = self.anchors.map() {
